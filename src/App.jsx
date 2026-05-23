@@ -2,18 +2,17 @@ import React, { useState, useMemo, useEffect, useRef, createContext, useContext 
 import { Search, MapPin, Phone, MessageCircle, Instagram, Clock, Star, Flame, ChevronRight, X, ArrowUpRight, ArrowRight, Sun, Moon, ChefHat } from 'lucide-react';
 
 // ============================================================
-// Hero background photos.
-// IMPORTANT: download the two Finns Rio photos and place them in
-// your repo's /public folder as hero-dark.jpg and hero-light.jpg.
-// Google's lh3.googleusercontent.com URLs are blocked from hotlinking,
-// so you MUST self-host these for them to render.
+// Hero background photos — self-hosted in /public.
+// fotodark.webp  → night shot (dark theme)
+// fotolight.webp → day shot (light theme)
 //
 // `import.meta.env.BASE_URL` resolves to whatever you set as `base`
 // in vite.config.js — necessary for GitHub Pages subpath deploys.
 // ============================================================
 const BASE = (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL) || '/';
-const BG_DARK  = BASE + 'hero-dark.jpg';
-const BG_LIGHT = BASE + 'hero-light.jpg';
+const BG_DARK  = BASE + 'fotodark.webp';
+const BG_LIGHT = BASE + 'fotolight.webp';
+const SOMOS_CARNAVAL = BASE + 'somoscarnaval.jpeg';
 
 // ============================================================
 // i18n
@@ -539,7 +538,7 @@ function useLiveStatus() {
               || (day === 6 && hour < 1) // Sat after midnight (was Fri night)
               || (day === 0 && hour < 1) // Sun after midnight
               || (day === 1 && hour < 1); // Mon after midnight (was Sun)
-  const closesText = isWeekend ? '01h' : '23h';
+  const closesText = isWeekend ? '12h' : '23h';
   return { isOpen, closesAt: closesText, day };
 }
 
@@ -1002,6 +1001,13 @@ export default function App() {
             <path d="M35 175 L65 175 L70 180 Q50 188 30 180 Z"/>
           </svg>
 
+          {/* SOMOS CARNAVAL — poster on the side (desktop / tablet) */}
+          <img
+            src={SOMOS_CARNAVAL}
+            alt="Somos Carnaval Eterno no Rio"
+            className="hidden md:block absolute left-6 lg:left-12 top-1/2 -translate-y-1/2 w-44 lg:w-56 xl:w-64 rounded-2xl shadow-2xl ring-1 ring-white/10 rotate-[-5deg] z-10 select-none pointer-events-none"
+          />
+
           <div className="relative flex-1 flex flex-col">
             {/* Centered logo + tagline */}
             <div className="flex-1 flex items-center justify-center px-5 py-20">
@@ -1011,11 +1017,11 @@ export default function App() {
                 </div>
                 <p className={`text-[11px] md:text-xs tracking-[0.3em] uppercase mb-8 md:mb-12 ${isDark ? 'text-amber-200/70' : 'text-stone-600'}`}>{t.locTag}</p>
 
-                {/* OFFICIAL LOGO */}
+                {/* SOMOS CARNAVAL — centered poster on mobile (no room for a side panel) */}
                 <img
-                  src={isDark ? LOGO_HERO : LOGO_HEADER}
-                  alt="Sushi Praiano Chill Out · Rio Beach Club by Finns"
-                  className="w-full max-w-md md:max-w-2xl mx-auto"
+                  src={SOMOS_CARNAVAL}
+                  alt="Somos Carnaval Eterno no Rio"
+                  className="md:hidden w-60 max-w-[80%] mx-auto rounded-2xl shadow-2xl ring-1 ring-white/10"
                 />
 
                 {/* Hero tagline — light weight for the modern restaurant look */}
