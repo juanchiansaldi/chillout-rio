@@ -10,8 +10,9 @@ import { Search, MapPin, Phone, MessageCircle, Instagram, Clock, Star, Flame, Ch
 // in vite.config.js — necessary for GitHub Pages subpath deploys.
 // ============================================================
 const BASE = (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL) || '/';
-const BG_DARK  = BASE + 'fotofea.jpeg';
-const BG_LIGHT = BASE + 'fotolight.webp';
+const BG_DARK   = BASE + 'fotodark.webp';   // desktop, dark theme
+const BG_LIGHT  = BASE + 'fotolight.webp';  // desktop, light theme
+const BG_MOBILE = BASE + 'fotofea.jpeg';    // mobile, both themes
 const SOMOS_CARNAVAL = BASE + 'somoscarnaval.png';
 
 // ============================================================
@@ -971,12 +972,20 @@ export default function App() {
             className="absolute inset-0 will-change-transform"
             style={{ transform: `translate3d(0, ${scrollY * 0.25}px, 0)`, transition: 'transform 0.05s linear' }}
           >
+            {/* Mobile: single carnival photo for both themes */}
+            <img
+              src={BG_MOBILE}
+              alt=""
+              className="md:hidden absolute inset-0 w-full h-full object-cover"
+              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+            />
+            {/* Desktop: theme-specific photos */}
             <img
               src={BG_DARK}
               alt=""
               referrerPolicy="no-referrer"
               crossOrigin="anonymous"
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${isDark ? 'opacity-100' : 'opacity-0'}`}
+              className={`hidden md:block absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${isDark ? 'opacity-100' : 'opacity-0'}`}
               onError={(e) => { e.currentTarget.style.display = 'none'; }}
             />
             <img
@@ -984,7 +993,7 @@ export default function App() {
               alt=""
               referrerPolicy="no-referrer"
               crossOrigin="anonymous"
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${isDark ? 'opacity-0' : 'opacity-100'}`}
+              className={`hidden md:block absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${isDark ? 'opacity-0' : 'opacity-100'}`}
               onError={(e) => { e.currentTarget.style.display = 'none'; }}
             />
             {/* Atmospheric overlay — light at top so the photo shows, darker at bottom for legibility */}
