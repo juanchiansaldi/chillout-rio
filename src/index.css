@@ -1,4 +1,7 @@
 @import "tailwindcss";
 
 html, body { margin: 0; padding: 0; }
-body { overflow-x: hidden; }
+/* overflow-x: clip prevents horizontal scroll WITHOUT breaking position: sticky
+   (overflow-x: hidden would create a scroll container and kill sticky).
+   overscroll-behavior-x: none kills the iOS rubber-band that flashes the white bg. */
+html, body { overflow-x: clip; overscroll-behavior-x: none; }

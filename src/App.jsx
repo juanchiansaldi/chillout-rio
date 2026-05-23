@@ -604,8 +604,8 @@ function Tag({ kind, label, theme }) {
 function LiveBadge({ t, theme }) {
   const { isOpen, closesAt } = useLiveStatus();
   return (
-    <span className={`inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border text-[11px] tracking-[0.15em] uppercase ${
-      theme === 'dark' ? 'border-stone-700 text-stone-300' : 'border-stone-300 text-stone-600'
+    <span className={`inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border text-[11px] tracking-[0.15em] uppercase backdrop-blur-sm ${
+      theme === 'dark' ? 'border-stone-700 text-stone-300' : 'border-white/35 text-white/90 bg-black/15'
     }`}>
       <span className="relative flex h-2 w-2">
         <span className={`absolute inline-flex h-full w-full rounded-full ${isOpen ? 'bg-emerald-400' : 'bg-stone-500'} animate-ping opacity-50`}></span>
@@ -684,7 +684,7 @@ function DishCard({ dish, lang, t, theme }) {
         </div>
         <div className="flex-1 min-w-0 p-4 md:p-5 flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1.5">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-1.5">
               <span className={`text-[10px] font-mono tracking-[0.15em] ${idClr}`}>#{dish.id}</span>
               {dish.tags?.map(tg => <Tag key={tg} kind={tg} label={t.tags[tg]} theme={theme}/>)}
             </div>
@@ -869,6 +869,8 @@ export default function App() {
   const [query, setQuery] = useState('');
   const [scrolled, setScrolled] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const [hideHeader, setHideHeader] = useState(false);
+  const lastScrollY = useRef(0);
   const [bgLoaded, setBgLoaded] = useState({ dark: false, light: false });
   const menuRef = useRef(null);
 
@@ -892,6 +894,11 @@ export default function App() {
         const y = window.scrollY;
         setScrollY(y);
         setScrolled(y > 100);
+        // Auto-hide header: hide when scrolling down past the hero, show when scrolling up
+        const last = lastScrollY.current;
+        if (y > last && y > 140) setHideHeader(true);
+        else if (y < last) setHideHeader(false);
+        lastScrollY.current = y;
       });
     };
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -933,10 +940,10 @@ export default function App() {
     <ThemeCtx.Provider value={{ theme, toggle: () => setTheme(t => t === 'dark' ? 'light' : 'dark') }}>
       <GoogleFonts/>
       <ScrollProgress theme={theme}/>
-      <div className={`min-h-screen overflow-x-hidden transition-colors duration-500 ${pageBg} ${pageText}`} style={{ fontFamily: "'Geist', 'Inter', ui-sans-serif, system-ui, sans-serif" }}>
+      <div className={`min-h-screen overflow-x-clip transition-colors duration-500 ${pageBg} ${pageText}`} style={{ fontFamily: "'Geist', 'Inter', ui-sans-serif, system-ui, sans-serif" }}>
 
         {/* ============== STICKY HEADER (always visible, with small logo) ============== */}
-        <header className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
+        <header className={`fixed top-0 inset-x-0 z-50 transition-transform duration-300 ${hideHeader ? '-translate-y-full' : 'translate-y-0'} [transition:transform_300ms,background-color_500ms,padding_500ms] ${
           scrolled
             ? (isDark ? 'bg-stone-950/85 backdrop-blur-md border-b border-stone-800/80 py-2.5' : 'bg-[#f7f2e9]/90 backdrop-blur-md border-b border-stone-200/80 py-2.5')
             : 'py-4 bg-transparent border-b border-transparent'
@@ -984,7 +991,7 @@ export default function App() {
             <div className={`absolute inset-0 ${
               isDark
                 ? 'bg-gradient-to-b from-stone-950/20 via-stone-950/10 to-stone-950/70'
-                : 'bg-gradient-to-b from-[#f7f2e9]/10 via-[#f7f2e9]/5 to-[#f7f2e9]/65'
+                : 'bg-gradient-to-b from-stone-900/25 via-stone-900/35 to-stone-900/65'
             }`}/>
             {/* Fallback gradient if images fail */}
             <div className={`absolute inset-0 -z-10 ${
@@ -995,7 +1002,7 @@ export default function App() {
           </div>
 
           {/* Decorative martini icon corner */}
-          <svg viewBox="0 0 100 200" className={`absolute top-12 right-8 md:right-16 w-12 md:w-16 ${isDark ? 'text-amber-200/30' : 'text-stone-900/15'}`} fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+          <svg viewBox="0 0 100 200" className={`absolute top-12 right-8 md:right-16 w-12 md:w-16 ${isDark ? 'text-amber-200/30' : 'text-amber-100/25'}`} fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
             <path d="M15 20 L85 20 L50 80 Z"/>
             <line x1="50" y1="80" x2="50" y2="160"/>
             <path d="M35 175 L65 175 L70 180 Q50 188 30 180 Z"/>
@@ -1015,7 +1022,7 @@ export default function App() {
                 <div className="mb-6 flex justify-center">
                   <LiveBadge t={t} theme={theme}/>
                 </div>
-                <p className={`text-[11px] md:text-xs tracking-[0.3em] uppercase mb-8 md:mb-12 ${isDark ? 'text-amber-200/70' : 'text-stone-600'}`}>{t.locTag}</p>
+                <p className={`text-[11px] md:text-xs tracking-[0.3em] uppercase mb-8 md:mb-12 ${isDark ? 'text-amber-200/70' : 'text-amber-100/90'}`} style={{ textShadow: isDark ? undefined : '0 2px 12px rgba(0,0,0,0.55)' }}>{t.locTag}</p>
 
                 {/* SOMOS CARNAVAL — transparent PNG, centered on mobile (no room for a side panel) */}
                 <img
@@ -1025,7 +1032,7 @@ export default function App() {
                 />
 
                 {/* Hero tagline — light weight for the modern restaurant look */}
-                <p className={`mt-10 md:mt-14 text-xl md:text-3xl leading-snug max-w-2xl mx-auto px-4 tracking-tight ${isDark ? 'text-stone-200' : 'text-stone-700'}`} style={{ fontFamily: "'Geist', 'Inter', system-ui, sans-serif", fontWeight: 300 }}>
+                <p className={`mt-10 md:mt-14 text-xl md:text-3xl leading-snug max-w-2xl mx-auto px-4 tracking-tight ${isDark ? 'text-stone-200' : 'text-white'}`} style={{ fontFamily: "'Geist', 'Inter', system-ui, sans-serif", fontWeight: 300, textShadow: isDark ? undefined : '0 2px 14px rgba(0,0,0,0.6)' }}>
                   {t.sub}
                 </p>
 
@@ -1045,7 +1052,7 @@ export default function App() {
 
             {/* Bottom info strip */}
             <div className="px-5 pb-6 max-w-6xl mx-auto w-full">
-              <div className={`flex flex-wrap items-center justify-center md:justify-between gap-4 text-[11px] tracking-[0.1em] uppercase ${isDark ? 'text-amber-100/60' : 'text-stone-500'}`}>
+              <div className={`flex flex-wrap items-center justify-center md:justify-between gap-4 text-[11px] tracking-[0.1em] uppercase ${isDark ? 'text-amber-100/60' : 'text-white/75'}`} style={{ textShadow: isDark ? undefined : '0 1px 10px rgba(0,0,0,0.55)' }}>
                 <div className="flex items-center gap-2"><MapPin size={12}/> {t.address} · {t.addressLine2}</div>
                 <div className="flex items-center gap-2"><Clock size={12}/> {t.hoursWeekend}</div>
               </div>
@@ -1113,9 +1120,11 @@ export default function App() {
               </div>
             </div>
 
-            {/* Category bar — sticky below the main header (which is ~56px tall) */}
-            <div className={`sticky top-[60px] z-30 -mx-5 px-5 mb-10 py-3 border-y backdrop-blur-md ${
-              isDark ? 'bg-stone-950/85 border-stone-800' : 'bg-[#efe7d7]/90 border-stone-200/60'
+            {/* Category bar — sticky; sits just below the header, or at the very top when the header is hidden */}
+            <div
+              style={{ top: hideHeader ? 0 : 56 }}
+              className={`sticky z-40 -mx-5 px-5 mb-10 py-3 border-y backdrop-blur-md transition-[top] duration-300 ${
+              isDark ? 'bg-stone-950/85 border-stone-800' : 'bg-[#efe7d7]/95 border-stone-200/60'
             }`}>
               <div className="flex gap-6 overflow-x-auto pb-1 text-[11px] tracking-[0.15em] uppercase" style={{ scrollbarWidth: 'none' }}>
                 <button
