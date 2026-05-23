@@ -947,7 +947,7 @@ export default function App() {
         <header className={`fixed top-0 inset-x-0 z-50 transition-transform duration-300 ${hideHeader ? '-translate-y-full' : 'translate-y-0'} [transition:transform_300ms,background-color_500ms,padding_500ms] ${
           scrolled
             ? (isDark ? 'bg-stone-950/85 backdrop-blur-md border-b border-stone-800/80 py-2.5' : 'bg-[#f7f2e9]/90 backdrop-blur-md border-b border-stone-200/80 py-2.5')
-            : 'py-4 border-b border-transparent bg-stone-950/35 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none'
+            : 'py-4 border-b border-transparent bg-stone-950/15 backdrop-blur-[2px] md:bg-transparent md:backdrop-blur-none'
         }`}>
           <div className="max-w-6xl mx-auto px-5 flex items-center justify-between gap-4">
             {/* Logo — on mobile it stays hidden over the hero photo and fades in once you scroll past the first screen; always visible on desktop */}
@@ -966,17 +966,17 @@ export default function App() {
         </header>
 
         {/* ============== HERO ============== */}
-        <section className={`relative min-h-screen flex flex-col overflow-hidden ${isDark ? 'text-stone-100' : 'text-stone-900'}`}>
+        <section className={`relative min-h-svh md:min-h-screen flex flex-col overflow-hidden ${isDark ? 'text-stone-100' : 'text-stone-900'}`}>
           {/* Background image with sutle parallax — referrerPolicy avoids Google's hotlink block */}
           <div
             className="absolute inset-0 will-change-transform"
             style={{ transform: `translate3d(0, ${scrollY * 0.25}px, 0)`, transition: 'transform 0.05s linear' }}
           >
-            {/* Mobile: single carnival photo for both themes */}
+            {/* Mobile: single carnival photo for both themes — framed on the dancers, bottom cropped */}
             <img
               src={BG_MOBILE}
               alt=""
-              className="md:hidden absolute inset-0 w-full h-full object-cover"
+              className="md:hidden absolute inset-0 w-full h-full object-cover object-[50%_32%]"
               onError={(e) => { e.currentTarget.style.display = 'none'; }}
             />
             {/* Desktop: theme-specific photos */}
@@ -1046,7 +1046,10 @@ export default function App() {
                   <ArrowRight size={14}/>
                 </button>
               </div>
-              <div className="mt-5 text-center text-[9px] tracking-[0.12em] uppercase text-white/70" style={{ textShadow: '0 1px 8px rgba(0,0,0,0.6)' }}>
+              <div className="mt-4 flex justify-center">
+                <LiveBadge t={t} theme={theme}/>
+              </div>
+              <div className="mt-3 text-center text-[9px] tracking-[0.12em] uppercase text-white/70" style={{ textShadow: '0 1px 8px rgba(0,0,0,0.6)' }}>
                 <p className="flex items-center justify-center gap-1.5"><MapPin size={10}/> {t.address} · {t.addressLine2}</p>
                 <p className="flex items-center justify-center gap-1.5 mt-1"><Clock size={10}/> {t.hoursWeekend}</p>
               </div>
