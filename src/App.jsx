@@ -10,7 +10,7 @@ import { Search, MapPin, Phone, MessageCircle, Instagram, Clock, Star, Flame, Ch
 // in vite.config.js — necessary for GitHub Pages subpath deploys.
 // ============================================================
 const BASE = (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL) || '/';
-const BG_DARK  = BASE + 'fotodark_crop.jpg';
+const BG_DARK  = BASE + 'fotofea.jpeg';
 const BG_LIGHT = BASE + 'fotolight.webp';
 const SOMOS_CARNAVAL = BASE + 'somoscarnaval.png';
 
