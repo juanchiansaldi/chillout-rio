@@ -12,7 +12,7 @@ import { Search, MapPin, Phone, MessageCircle, Instagram, Clock, Star, Flame, Ch
 const BASE = (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL) || '/';
 const BG_DARK  = BASE + 'fotodark.webp';
 const BG_LIGHT = BASE + 'fotolight.webp';
-const SOMOS_CARNAVAL = BASE + 'somoscarnaval.jpeg';
+const SOMOS_CARNAVAL = BASE + 'somoscarnaval.png';
 
 // ============================================================
 // i18n
@@ -933,7 +933,7 @@ export default function App() {
     <ThemeCtx.Provider value={{ theme, toggle: () => setTheme(t => t === 'dark' ? 'light' : 'dark') }}>
       <GoogleFonts/>
       <ScrollProgress theme={theme}/>
-      <div className={`min-h-screen transition-colors duration-500 ${pageBg} ${pageText}`} style={{ fontFamily: "'Geist', 'Inter', ui-sans-serif, system-ui, sans-serif" }}>
+      <div className={`min-h-screen overflow-x-hidden transition-colors duration-500 ${pageBg} ${pageText}`} style={{ fontFamily: "'Geist', 'Inter', ui-sans-serif, system-ui, sans-serif" }}>
 
         {/* ============== STICKY HEADER (always visible, with small logo) ============== */}
         <header className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
@@ -1001,11 +1001,11 @@ export default function App() {
             <path d="M35 175 L65 175 L70 180 Q50 188 30 180 Z"/>
           </svg>
 
-          {/* SOMOS CARNAVAL — poster on the side (desktop / tablet) */}
+          {/* SOMOS CARNAVAL — transparent PNG floating on the side (desktop / tablet) */}
           <img
             src={SOMOS_CARNAVAL}
             alt="Somos Carnaval Eterno no Rio"
-            className="hidden md:block absolute left-6 lg:left-12 top-1/2 -translate-y-1/2 w-44 lg:w-56 xl:w-64 rounded-2xl shadow-2xl ring-1 ring-white/10 rotate-[-5deg] z-10 select-none pointer-events-none"
+            className="hidden md:block absolute left-6 lg:left-12 top-1/2 -translate-y-1/2 w-44 lg:w-56 xl:w-64 z-10 select-none pointer-events-none [filter:drop-shadow(0_0_4px_rgba(0,0,0,0.85))_drop-shadow(0_4px_14px_rgba(0,0,0,0.55))]"
           />
 
           <div className="relative flex-1 flex flex-col">
@@ -1017,11 +1017,11 @@ export default function App() {
                 </div>
                 <p className={`text-[11px] md:text-xs tracking-[0.3em] uppercase mb-8 md:mb-12 ${isDark ? 'text-amber-200/70' : 'text-stone-600'}`}>{t.locTag}</p>
 
-                {/* SOMOS CARNAVAL — centered poster on mobile (no room for a side panel) */}
+                {/* SOMOS CARNAVAL — transparent PNG, centered on mobile (no room for a side panel) */}
                 <img
                   src={SOMOS_CARNAVAL}
                   alt="Somos Carnaval Eterno no Rio"
-                  className="md:hidden w-60 max-w-[80%] mx-auto rounded-2xl shadow-2xl ring-1 ring-white/10"
+                  className="md:hidden w-60 max-w-[80%] mx-auto [filter:drop-shadow(0_0_4px_rgba(0,0,0,0.85))_drop-shadow(0_4px_14px_rgba(0,0,0,0.55))]"
                 />
 
                 {/* Hero tagline — light weight for the modern restaurant look */}
@@ -1057,15 +1057,15 @@ export default function App() {
         <section className={`relative ${sectionBg} border-t ${borderClr}`}>
           <div className="max-w-6xl mx-auto px-5 py-20 md:py-32">
             <Reveal>
-              <div className="flex items-start justify-between gap-8 mb-10 md:mb-16">
-                <div className="max-w-2xl">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-8 mb-10 md:mb-16">
+                <div className="min-w-0 max-w-2xl">
                   <p className={`text-[11px] tracking-[0.3em] uppercase mb-4 ${eyebrowClr}`}>01</p>
                   <DisplayTitle parts={t.featuredTitle} theme={theme} className="text-5xl md:text-7xl mb-5"/>
                   <p className={`text-base md:text-lg leading-relaxed max-w-md ${mutedClr}`}>
                     {t.featuredSub}
                   </p>
                 </div>
-                <div className="text-right shrink-0 pt-2">
+                <div className="text-left sm:text-right shrink-0 sm:pt-2">
                   <p className={`text-3xl md:text-4xl tabular-nums ${isDark ? 'text-stone-100' : 'text-stone-900'}`} style={{ fontWeight: 300 }}>0{featured.length}</p>
                   <p className={`text-[10px] tracking-[0.25em] uppercase mt-1 ${subtleClr}`}>{t.selectedPlates}</p>
                 </div>
