@@ -947,11 +947,11 @@ export default function App() {
         <header className={`fixed top-0 inset-x-0 z-50 transition-transform duration-300 ${hideHeader ? '-translate-y-full' : 'translate-y-0'} [transition:transform_300ms,background-color_500ms,padding_500ms] ${
           scrolled
             ? (isDark ? 'bg-stone-950/85 backdrop-blur-md border-b border-stone-800/80 py-2.5' : 'bg-[#f7f2e9]/90 backdrop-blur-md border-b border-stone-200/80 py-2.5')
-            : 'py-4 bg-transparent border-b border-transparent'
+            : 'py-4 border-b border-transparent bg-stone-950/35 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none'
         }`}>
           <div className="max-w-6xl mx-auto px-5 flex items-center justify-between gap-4">
-            {/* Small logo, always visible — switches between white and dark variants */}
-            <a href="#top" className="flex items-center" aria-label="Chill Out Rio · home">
+            {/* Logo — on mobile it stays hidden over the hero photo and fades in once you scroll past the first screen; always visible on desktop */}
+            <a href="#top" className={`flex items-center transition-opacity duration-300 ${scrollY > 500 ? '' : 'opacity-0 pointer-events-none md:opacity-100 md:pointer-events-auto'}`} aria-label="Chill Out Rio · home">
               <img
                 src={isDark ? LOGO_FOOTER : LOGO_HEADER}
                 alt="Chill Out Rio"
@@ -1025,45 +1025,68 @@ export default function App() {
           />
 
           <div className="relative flex-1 flex flex-col">
-            {/* Centered logo + tagline */}
-            <div className="flex-1 flex items-center justify-center px-5 py-20">
-              <div className="text-center w-full max-w-4xl">
-                <div className="mb-6 flex justify-center">
-                  <LiveBadge t={t} theme={theme}/>
-                </div>
-                <p className={`text-[11px] md:text-xs tracking-[0.3em] uppercase mb-8 md:mb-12 ${isDark ? 'text-amber-200/70' : 'text-amber-100/90'}`} style={{ textShadow: isDark ? undefined : '0 2px 12px rgba(0,0,0,0.55)' }}>{t.locTag}</p>
-
-                {/* SOMOS CARNAVAL — transparent PNG, centered on mobile (no room for a side panel) */}
-                <img
-                  src={SOMOS_CARNAVAL}
-                  alt="Somos Carnaval Eterno no Rio"
-                  className="md:hidden w-60 max-w-[80%] mx-auto [filter:drop-shadow(0_0_4px_rgba(0,0,0,0.85))_drop-shadow(0_4px_14px_rgba(0,0,0,0.55))]"
-                />
-
-                {/* Hero tagline — light weight for the modern restaurant look */}
-                <p className={`mt-10 md:mt-14 text-xl md:text-3xl leading-snug max-w-2xl mx-auto px-4 tracking-tight ${isDark ? 'text-stone-200' : 'text-white'}`} style={{ fontFamily: "'Geist', 'Inter', system-ui, sans-serif", fontWeight: 300, textShadow: isDark ? undefined : '0 2px 14px rgba(0,0,0,0.6)' }}>
-                  {t.sub}
-                </p>
-
-                <div className="mt-10 md:mt-12 flex items-center justify-center">
-                  <button
-                    onClick={scrollToMenu}
-                    className={`group inline-flex items-center justify-center gap-2 px-10 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all hover:scale-[1.02] active:scale-95 ${
-                      isDark ? 'bg-amber-200 text-stone-950 hover:bg-amber-100' : 'bg-stone-900 text-amber-100 hover:bg-stone-800'
-                    }`}
-                  >
-                    {t.ctaMenu}
-                    <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform"/>
-                  </button>
-                </div>
+            {/* ===== MOBILE hero: minimal overlay so the carnival dancers stay visible ===== */}
+            <div className="md:hidden flex-1 flex flex-col px-5 pt-16 pb-5">
+              {/* Somos Carnaval — small, at the very top */}
+              <img
+                src={SOMOS_CARNAVAL}
+                alt="Somos Carnaval Eterno no Rio"
+                className="w-40 max-w-[58%] mx-auto [filter:drop-shadow(0_0_4px_rgba(0,0,0,0.85))_drop-shadow(0_4px_14px_rgba(0,0,0,0.55))]"
+              />
+              {/* spacer keeps the centre of the photo (the dancers) clear */}
+              <div className="flex-1" />
+              <div className="flex justify-center">
+                <button
+                  onClick={scrollToMenu}
+                  className={`inline-flex items-center justify-center gap-2 px-7 py-2.5 rounded-full font-medium text-xs tracking-wide transition-all active:scale-95 ${
+                    isDark ? 'bg-amber-200 text-stone-950' : 'bg-stone-900 text-amber-100'
+                  }`}
+                >
+                  {t.ctaMenu}
+                  <ArrowRight size={14}/>
+                </button>
+              </div>
+              <div className="mt-5 text-center text-[9px] tracking-[0.12em] uppercase text-white/70" style={{ textShadow: '0 1px 8px rgba(0,0,0,0.6)' }}>
+                <p className="flex items-center justify-center gap-1.5"><MapPin size={10}/> {t.address} · {t.addressLine2}</p>
+                <p className="flex items-center justify-center gap-1.5 mt-1"><Clock size={10}/> {t.hoursWeekend}</p>
               </div>
             </div>
 
-            {/* Bottom info strip */}
-            <div className="px-5 pb-6 max-w-6xl mx-auto w-full">
-              <div className={`flex flex-wrap items-center justify-center md:justify-between gap-4 text-[11px] tracking-[0.1em] uppercase ${isDark ? 'text-amber-100/60' : 'text-white/75'}`} style={{ textShadow: isDark ? undefined : '0 1px 10px rgba(0,0,0,0.55)' }}>
-                <div className="flex items-center gap-2"><MapPin size={12}/> {t.address} · {t.addressLine2}</div>
-                <div className="flex items-center gap-2"><Clock size={12}/> {t.hoursWeekend}</div>
+            {/* ===== DESKTOP hero (unchanged) ===== */}
+            <div className="hidden md:flex flex-1 flex-col">
+              {/* Centered logo + tagline */}
+              <div className="flex-1 flex items-center justify-center px-5 py-20">
+                <div className="text-center w-full max-w-4xl">
+                  <div className="mb-6 flex justify-center">
+                    <LiveBadge t={t} theme={theme}/>
+                  </div>
+                  <p className={`text-[11px] md:text-xs tracking-[0.3em] uppercase mb-8 md:mb-12 ${isDark ? 'text-amber-200/70' : 'text-amber-100/90'}`} style={{ textShadow: isDark ? undefined : '0 2px 12px rgba(0,0,0,0.55)' }}>{t.locTag}</p>
+
+                  {/* Hero tagline — light weight for the modern restaurant look */}
+                  <p className={`mt-10 md:mt-14 text-xl md:text-3xl leading-snug max-w-2xl mx-auto px-4 tracking-tight ${isDark ? 'text-stone-200' : 'text-white'}`} style={{ fontFamily: "'Geist', 'Inter', system-ui, sans-serif", fontWeight: 300, textShadow: isDark ? undefined : '0 2px 14px rgba(0,0,0,0.6)' }}>
+                    {t.sub}
+                  </p>
+
+                  <div className="mt-10 md:mt-12 flex items-center justify-center">
+                    <button
+                      onClick={scrollToMenu}
+                      className={`group inline-flex items-center justify-center gap-2 px-10 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all hover:scale-[1.02] active:scale-95 ${
+                        isDark ? 'bg-amber-200 text-stone-950 hover:bg-amber-100' : 'bg-stone-900 text-amber-100 hover:bg-stone-800'
+                      }`}
+                    >
+                      {t.ctaMenu}
+                      <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform"/>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom info strip */}
+              <div className="px-5 pb-6 max-w-6xl mx-auto w-full">
+                <div className={`flex flex-wrap items-center justify-center md:justify-between gap-4 text-[11px] tracking-[0.1em] uppercase ${isDark ? 'text-amber-100/60' : 'text-white/75'}`} style={{ textShadow: isDark ? undefined : '0 1px 10px rgba(0,0,0,0.55)' }}>
+                  <div className="flex items-center gap-2"><MapPin size={12}/> {t.address} · {t.addressLine2}</div>
+                  <div className="flex items-center gap-2"><Clock size={12}/> {t.hoursWeekend}</div>
+                </div>
               </div>
             </div>
           </div>
