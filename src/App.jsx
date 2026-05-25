@@ -548,19 +548,21 @@ function useLiveStatus() {
 // ============================================================
 // Small UI atoms
 // ============================================================
-function LangSwitcher({ lang, setLang, theme }) {
+// `over` = controls sit over the dark hero photo (mobile, not scrolled) → force light/high-contrast colors
+function LangSwitcher({ lang, setLang, theme, over }) {
   const opts = [['pt','PT'],['es','ES'],['en','EN']];
+  const sep = over ? 'text-white/40' : (theme === 'dark' ? 'text-stone-600' : 'text-stone-400');
   return (
     <div className="inline-flex items-center gap-3 text-[11px] tracking-[0.15em] font-medium">
       {opts.map(([k,l], i) => (
         <React.Fragment key={k}>
-          {i > 0 && <span className={theme === 'dark' ? 'text-stone-600' : 'text-stone-400'}>·</span>}
+          {i > 0 && <span className={sep}>·</span>}
           <button
             onClick={() => setLang(k)}
             className={`transition-colors ${
               lang === k
-                ? (theme === 'dark' ? 'text-amber-200' : 'text-stone-900')
-                : (theme === 'dark' ? 'text-stone-500 hover:text-stone-300' : 'text-stone-400 hover:text-stone-700')
+                ? (over ? 'text-amber-300' : (theme === 'dark' ? 'text-amber-200' : 'text-stone-900'))
+                : (over ? 'text-white/75 hover:text-white' : (theme === 'dark' ? 'text-stone-500 hover:text-stone-300' : 'text-stone-400 hover:text-stone-700'))
             }`}
           >{l}</button>
         </React.Fragment>
@@ -569,16 +571,18 @@ function LangSwitcher({ lang, setLang, theme }) {
   );
 }
 
-function ThemeToggle() {
+function ThemeToggle({ over }) {
   const { theme, toggle } = useContext(ThemeCtx);
   return (
     <button
       onClick={toggle}
       aria-label="Toggle theme"
       className={`relative inline-flex items-center justify-center w-9 h-9 rounded-full border transition-all ${
-        theme === 'dark'
-          ? 'border-stone-700 hover:border-amber-200/40 text-amber-200/80'
-          : 'border-stone-300 hover:border-stone-900 text-stone-700'
+        over
+          ? 'border-white/45 text-white hover:border-white'
+          : (theme === 'dark'
+            ? 'border-stone-700 hover:border-amber-200/40 text-amber-200/80'
+            : 'border-stone-300 hover:border-stone-900 text-stone-700')
       }`}
     >
       {theme === 'dark' ? <Sun size={16} strokeWidth={1.5}/> : <Moon size={16} strokeWidth={1.5}/>}
@@ -874,6 +878,7 @@ export default function App() {
   const [scrollY, setScrollY] = useState(0);
   const [hideHeader, setHideHeader] = useState(false);
   const lastScrollY = useRef(0);
+  const [isMobile, setIsMobile] = useState(false);
   const [bgLoaded, setBgLoaded] = useState({ dark: false, light: false });
   const menuRef = useRef(null);
 
@@ -907,6 +912,17 @@ export default function App() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => { window.removeEventListener('scroll', onScroll); cancelAnimationFrame(raf); };
   }, []);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+
+  // Nav controls sit over the dark hero photo only on mobile while at the top → light styling
+  const navOverPhoto = isMobile && !scrolled;
 
   const featured = useMemo(() =>
     menu.filter(m => m.tags?.includes('chef') && m.price != null && PHOTOS[m.id]).slice(0, 6),
@@ -960,9 +976,9 @@ export default function App() {
                 className="h-7 md:h-8 w-auto"
               />
             </a>
-            <div className="flex items-center gap-4">
-              <LangSwitcher lang={lang} setLang={setLang} theme={theme}/>
-              <ThemeToggle/>
+            <div className={`flex items-center gap-4 ${navOverPhoto ? '[filter:drop-shadow(0_1px_4px_rgba(0,0,0,0.85))]' : ''}`}>
+              <LangSwitcher lang={lang} setLang={setLang} theme={theme} over={navOverPhoto}/>
+              <ThemeToggle over={navOverPhoto}/>
             </div>
           </div>
         </header>
