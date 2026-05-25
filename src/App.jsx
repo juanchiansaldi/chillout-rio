@@ -14,6 +14,8 @@ const BG_DARK   = BASE + 'fotodark.webp';   // desktop, dark theme
 const BG_LIGHT  = BASE + 'fotolight.webp';  // desktop, light theme
 const BG_MOBILE = BASE + 'fotofea.jpeg';    // mobile, both themes
 const SOMOS_CARNAVAL = BASE + 'somoscarnaval.png';
+const LOGO_DUO_DARK  = BASE + 'logo1.jpeg';  // FINNS | CHILL OUT, white on black → use over dark backgrounds (screen-blended)
+const LOGO_DUO_LIGHT = BASE + 'logo2.jpeg';  // dark version, for light backgrounds
 
 // ============================================================
 // i18n
@@ -1025,33 +1027,41 @@ export default function App() {
           />
 
           <div className="relative flex-1 flex flex-col">
-            {/* ===== MOBILE hero: minimal overlay so the carnival dancers stay visible ===== */}
-            <div className="md:hidden flex-1 flex flex-col px-5 pt-16 pb-5">
-              {/* Somos Carnaval — small, at the very top */}
+            {/* ===== MOBILE hero: clean photo on top; brand block + menu buttons in the lower zone ===== */}
+            <div className="md:hidden flex-1 flex flex-col px-5 pt-16 pb-8">
+              {/* top spacer: keeps the carnival photo (the dancers) uncovered */}
+              <div className="flex-1" />
+
+              {/* Somos Carnaval — moved down to the lower zone */}
               <img
                 src={SOMOS_CARNAVAL}
                 alt="Somos Carnaval Eterno no Rio"
-                className="w-40 max-w-[58%] mx-auto [filter:drop-shadow(0_0_4px_rgba(0,0,0,0.85))_drop-shadow(0_4px_14px_rgba(0,0,0,0.55))]"
+                className="w-44 max-w-[60%] mx-auto [filter:drop-shadow(0_0_4px_rgba(0,0,0,0.85))_drop-shadow(0_4px_14px_rgba(0,0,0,0.55))]"
               />
-              {/* spacer keeps the centre of the photo (the dancers) clear */}
-              <div className="flex-1" />
-              <div className="flex justify-center">
+
+              {/* Finns · Chill Out logo — white logo over the photo (black JPG bg dropped via screen blend) */}
+              <img
+                src={LOGO_DUO_DARK}
+                alt="Finns · Chill Out — Rio Beach Club"
+                className="mt-5 w-full max-w-[360px] mx-auto mix-blend-screen select-none pointer-events-none"
+              />
+
+              {/* Two menus aligned under each brand: FINNS (gastronomia internacional) · CHILL OUT (sushi) */}
+              <div className="mt-5 grid grid-cols-2 gap-3">
                 <button
                   onClick={scrollToMenu}
-                  className={`inline-flex items-center justify-center gap-2 px-7 py-2.5 rounded-full font-medium text-xs tracking-wide transition-all active:scale-95 ${
-                    isDark ? 'bg-amber-200 text-stone-950' : 'bg-stone-900 text-amber-100'
-                  }`}
+                  className="rounded-2xl px-3 py-3 text-center bg-amber-200 text-stone-950 active:scale-95 transition-transform"
                 >
-                  {t.ctaMenu}
-                  <ArrowRight size={14}/>
+                  <span className="block text-[8px] tracking-[0.22em] uppercase opacity-70">Cardápio</span>
+                  <span className="block text-[13px] font-semibold leading-tight mt-0.5">Gastronomia Internacional</span>
                 </button>
-              </div>
-              <div className="mt-4 flex justify-center">
-                <LiveBadge t={t} theme={theme}/>
-              </div>
-              <div className="mt-3 text-center text-[9px] tracking-[0.12em] uppercase text-white/70" style={{ textShadow: '0 1px 8px rgba(0,0,0,0.6)' }}>
-                <p className="flex items-center justify-center gap-1.5"><MapPin size={10}/> {t.address} · {t.addressLine2}</p>
-                <p className="flex items-center justify-center gap-1.5 mt-1"><Clock size={10}/> {t.hoursWeekend}</p>
+                <button
+                  onClick={scrollToMenu}
+                  className="rounded-2xl px-3 py-3 text-center bg-amber-200 text-stone-950 active:scale-95 transition-transform"
+                >
+                  <span className="block text-[8px] tracking-[0.22em] uppercase opacity-70">Cardápio</span>
+                  <span className="block text-[13px] font-semibold leading-tight mt-0.5">Sushi</span>
+                </button>
               </div>
             </div>
 
