@@ -28,7 +28,7 @@ jobs:
         env:
           # Repo name on GitHub (the path under juanchiansaldi.github.io/).
           # If you use a custom domain, set VITE_BASE: '/'
-          VITE_BASE: '/FINNSRIO/'
+          VITE_BASE: '/'
         run: npm run build
       - uses: actions/configure-pages@v5
         with:
