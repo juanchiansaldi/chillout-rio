@@ -60,9 +60,18 @@ const i18n = {
       makimono: 'Makimono', hots: 'Hots', combinados: 'Combinados',
       yakisobas: 'Yakisobas', pokes: 'Pokes', doces: 'Harumaki Doces',
       vinhos: 'Vinhos', bebidas: 'Bebidas',
+      // Internacional
+      finns_specials: "Finns' Specials", petiscos: 'Petiscos', caldinhos: 'Caldinhos',
+      sanduiches: 'Sanduíches', salada_int: 'Saladas', pratos_exec: 'Pratos Executivos',
+      massas: 'Massas e Risoto', pizza: 'Pizza', sobremesa: 'Sobremesa',
+      int_bebidas: 'Bebidas', int_sucos: 'Sucos e Limonadas', int_cervejas: 'Cervejas',
+      int_destilados: 'Destilados', int_caipirinhas: 'Caipirinhas', int_combos: 'Combos',
+      int_gindrinks: 'Drinks com Gin', int_classicos: 'Clássicos', int_spritz: 'Spritz',
+      int_vinhos: 'Vinhos',
     },
     tags: { chef: 'Recomendado', hot: 'Picante', veg: 'Veg' },
     days: ['DOM','SEG','TER','QUA','QUI','SEX','SÁB'],
+    menuSushi: 'Sushi', menuInternacional: 'Gastronomia Internacional',
   },
   es: {
     locTag: 'Sushi de Playa · Río de Janeiro',
@@ -103,9 +112,18 @@ const i18n = {
       makimono: 'Makimono', hots: 'Hots', combinados: 'Combinados',
       yakisobas: 'Yakisobas', pokes: 'Pokes', doces: 'Harumaki Dulces',
       vinhos: 'Vinos', bebidas: 'Bebidas',
+      // Internacional
+      finns_specials: "Finns' Specials", petiscos: 'Picadas', caldinhos: 'Caldos',
+      sanduiches: 'Sándwiches', salada_int: 'Ensaladas', pratos_exec: 'Platos Ejecutivos',
+      massas: 'Pastas y Risotto', pizza: 'Pizza', sobremesa: 'Postres',
+      int_bebidas: 'Bebidas', int_sucos: 'Jugos y Limonadas', int_cervejas: 'Cervezas',
+      int_destilados: 'Destilados', int_caipirinhas: 'Caipirinhas', int_combos: 'Combos',
+      int_gindrinks: 'Drinks con Gin', int_classicos: 'Clásicos', int_spritz: 'Spritz',
+      int_vinhos: 'Vinos',
     },
     tags: { chef: 'Recomendado', hot: 'Picante', veg: 'Veg' },
     days: ['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'],
+    menuSushi: 'Sushi', menuInternacional: 'Gastronomía Internacional',
   },
   en: {
     locTag: 'Beach Sushi · Rio de Janeiro',
@@ -146,9 +164,18 @@ const i18n = {
       makimono: 'Makimono', hots: 'Hot Rolls', combinados: 'Combos',
       yakisobas: 'Yakisoba', pokes: 'Poke', doces: 'Sweet Harumaki',
       vinhos: 'Wines', bebidas: 'Drinks',
+      // International
+      finns_specials: "Finns' Specials", petiscos: 'Snacks', caldinhos: 'Broths',
+      sanduiches: 'Sandwiches', salada_int: 'Salads', pratos_exec: 'Executive Dishes',
+      massas: 'Pasta & Risotto', pizza: 'Pizza', sobremesa: 'Dessert',
+      int_bebidas: 'Drinks', int_sucos: 'Juices & Lemonade', int_cervejas: 'Beer',
+      int_destilados: 'Spirits', int_caipirinhas: 'Caipirinhas', int_combos: 'Combos',
+      int_gindrinks: 'Gin Drinks', int_classicos: 'Classics', int_spritz: 'Spritz',
+      int_vinhos: 'Wine',
     },
     tags: { chef: "Chef's pick", hot: 'Spicy', veg: 'Veg' },
     days: ['SUN','MON','TUE','WED','THU','FRI','SAT'],
+    menuSushi: 'Sushi', menuInternacional: 'International Cuisine',
   },
 };
 
@@ -231,6 +258,15 @@ const CATEGORIES = [
   'entradas','harumaki','niguiri','gunkan','sashimi','temaki',
   'makimono','hots','combinados','yakisobas','pokes','doces','vinhos','bebidas'
 ];
+
+// Internacional menu (Finns gastronomia internacional) — categories ordered for the page
+const INT_CATEGORIES = [
+  'finns_specials','petiscos','caldinhos','sanduiches','salada_int','pratos_exec',
+  'massas','pizza','sobremesa','int_bebidas','int_sucos','int_cervejas','int_destilados',
+  'int_caipirinhas','int_combos','int_gindrinks','int_classicos','int_spritz','int_vinhos'
+];
+const INT_CAT_SET = new Set(INT_CATEGORIES);
+const kindOf = (d) => (INT_CAT_SET.has(d.cat) ? 'internacional' : 'sushi');
 
 const menu = [
   // ENTRADAS
@@ -493,6 +529,414 @@ const menu = [
     d:{ pt:'Açaí grande. Adicionais: morango, banana, granola, leite ninho (+R$8).',
         es:'Açaí grande. Extras: frutilla, banana, granola, leche en polvo (+R$8).',
         en:'Large açaí. Add-ons: strawberry, banana, granola, powdered milk (+R$8).' } },
+
+  // ============================================================
+  // GASTRONOMIA INTERNACIONAL — Finns Rio Beach Club (carta1–4)
+  // ============================================================
+
+  // FINNS' SPECIALS
+  { id:'I036', cat:'finns_specials', name:'Camarão Catupiry', price:172.80, tags:['chef'],
+    d:{ pt:'Camarão ao molho branco com batata frita.',
+        es:'Camarones a la salsa Catupiry con papas fritas.',
+        en:'Shrimp in Catupiry cream sauce with french fries.' } },
+  { id:'I037', cat:'finns_specials', name:'Filet de Peixe Finns', price:159.80,
+    d:{ pt:'Com arroz branco, batata frita, salada e pirão.',
+        es:'Con arroz blanco, papas fritas, ensalada y pirão.',
+        en:'Fish filet with rice, fries, salad and mush.' } },
+  { id:'I038', cat:'finns_specials', name:'Moqueca Finns', units:2, price:210.80,
+    d:{ pt:'Moqueca de peixe para duas pessoas.',
+        es:'Moqueca de pescado para dos personas.',
+        en:'Brazilian fish moqueca for two.' } },
+  { id:'I039', cat:'finns_specials', name:'Picanha do Finns', price:174.80, tags:['chef'],
+    d:{ pt:'500g de picanha fatiada na chapa, arroz branco, farofa de ovos e fritas.',
+        es:'500g de picaña a la plancha, arroz blanco, farofa y papas fritas.',
+        en:'500g sliced sirloin steak with rice, egg crumbs and fries.' } },
+  { id:'I040', cat:'finns_specials', name:'Big Mix Finns', price:279.80, tags:['chef'],
+    d:{ pt:'Camarões, lula, isca de salmão, isca de peixe, arroz, pirão e salada.',
+        es:'Camarón, calamar, salmón, pescado, arroz, pirão y ensalada.',
+        en:'Grilled shrimp, squid, salmon, fish, rice, mush and salad.' } },
+  { id:'I041', cat:'finns_specials', name:'Filé Finns ao Molho Madeira', units:2, price:174.80,
+    d:{ pt:'Filé mignon, arroz piamontese e batatas fritas.',
+        es:'Filet mignon, arroz piamontés y papas fritas.',
+        en:'Filet mignon, piamontese rice and french fries.' } },
+  { id:'I042', cat:'finns_specials', name:'Chapa de churrasco misto', units:2, price:228.80, tags:['chef'],
+    d:{ pt:'Filé mignon, 2 linguiças, filet de frango, queijo coalho. Acompanha arroz, feijão, batata frita, farofa e vinagrete.',
+        es:'Filet mignon, 2 chorizos, pollo, queso coalho. Con arroz, frijoles, papas, farofa y vinagreta.',
+        en:'Filet mignon, 2 sausages, chicken filet, coalho cheese. With rice, beans, fries, farofa and vinaigrette.' } },
+  { id:'I043', cat:'finns_specials', name:'Costelinha Carioca', units:2, price:149.80,
+    d:{ pt:'Costela ribs defumada ao molho barbecue, batata frita e arroz branco.',
+        es:'Costillas ahumadas con BBQ, papas fritas y arroz.',
+        en:'Smoked ribs in BBQ sauce with rice and fries.' } },
+  { id:'I044', cat:'finns_specials', name:'Salmão do Finns', units:2, price:184.80,
+    d:{ pt:'Salmão com arroz de brócolis e legumes no vapor.',
+        es:'Salmón con arroz de brócoli y verduras al vapor.',
+        en:'Salmon with broccoli rice and steamed vegetables.' } },
+  { id:'I045', cat:'finns_specials', name:'Peixe do altántico', units:2, price:165.80,
+    d:{ pt:'Peixe lobeto frito, arroz, feijão e batata frita.',
+        es:'Pescado del Atlántico frito, arroz, frijoles y papas.',
+        en:'Fried Atlantic fish with rice, beans and french fries.' } },
+  { id:'I046', cat:'finns_specials', name:'Bobó de camarão', units:2, price:198.80, tags:['chef'],
+    d:{ pt:'Bobó com arroz e farofa.',
+        es:'Bobó de camarón con arroz y farofa.',
+        en:'Shrimp bobó with rice and crumbs.' } },
+  { id:'I047', cat:'finns_specials', name:'Frango Brasileira', units:2, price:142.80,
+    d:{ pt:'Filet de frango, arroz, feijão, batata frita e farofa.',
+        es:'Pollo, arroz, frijoles, papas y farofa.',
+        en:'Chicken with rice, beans, french fries and farofa.' } },
+
+  // PETISCOS
+  { id:'I001', cat:'petiscos', name:'Batata Frita com molho Barbecue', price:49.80,
+    d:{ pt:'Batatas fritas com molho barbecue.', es:'Papas fritas con BBQ.', en:'French fries with barbecue sauce.' } },
+  { id:'I002', cat:'petiscos', name:'Batata Frita com Cheddar e Bacon', price:59.80, tags:['chef'],
+    d:{ pt:'Batatas fritas com cheddar e bacon.', es:'Papas fritas con cheddar y panceta.', en:'French fries with cheddar and bacon.' } },
+  { id:'I003', cat:'petiscos', name:'Aipim Frito com manteiga de garrafa', price:49.80,
+    d:{ pt:'Mandioca frita com manteiga de garrafa.', es:'Mandioca frita con mantequilla artesanal.', en:'Fried cassava with bottled butter.' } },
+  { id:'I004', cat:'petiscos', name:'Croquete de Carne', units:12, price:47.90,
+    d:{ pt:'12 unidades.', es:'12 unidades.', en:'12 units.' } },
+  { id:'I005', cat:'petiscos', name:'Iscas de Peixe com molho Tártaro', price:94.80,
+    d:{ pt:'Iscas de peixe com molho tártaro.', es:'Tiras de pescado con salsa tártara.', en:'Fish strips with tartar sauce.' } },
+  { id:'I006', cat:'petiscos', name:'Delícias Finns', price:46.10,
+    d:{ pt:'Bolinho de feijoada e costela com barbecue.',
+        es:'Bolitas de feijoada y costillas con BBQ.',
+        en:'Feijoada bites and ribs with BBQ sauce.' } },
+  { id:'I007', cat:'petiscos', name:'Bolinho de Bacalhau', units:12, price:64.80,
+    d:{ pt:'12 unidades.', es:'12 unidades.', en:'12 units.' } },
+  { id:'I008', cat:'petiscos', name:'Mix de Pastéis', price:44.20,
+    d:{ pt:'Mix de pastéis.', es:'Mix de pastelitos.', en:'Pastry mix.' } },
+  { id:'I009', cat:'petiscos', name:'Anéis de Cebola', price:39.80, tags:['veg'],
+    d:{ pt:'Anéis de cebola crocantes.', es:'Aros de cebolla crocantes.', en:'Crispy onion rings.' } },
+  { id:'I010', cat:'petiscos', name:'Espetinho de Frango', price:32.80,
+    d:{ pt:'Espetinho de frango.', es:'Brocheta de pollo.', en:'Chicken skewer.' } },
+  { id:'I011', cat:'petiscos', name:'Espetinho de Carne', price:42.80,
+    d:{ pt:'Espetinho de carne.', es:'Brocheta de carne.', en:'Beef skewer.' } },
+  { id:'I012', cat:'petiscos', name:'Espetinho de Queijo Coalho', price:39.80, tags:['veg'],
+    d:{ pt:'Com geléia de pimenta.', es:'Con mermelada de pimiento.', en:'With pepper jelly.' } },
+  { id:'I013', cat:'petiscos', name:'Carne Seca com aipim e manteiga de garrafa', price:119.80, tags:['chef'],
+    d:{ pt:'Carne seca, mandioca e manteiga de garrafa.',
+        es:'Carne seca, mandioca y mantequilla.',
+        en:'Dry meat with cassava and bottled butter.' } },
+  { id:'I014', cat:'petiscos', name:'Chapa Mista', price:209.80, tags:['chef'],
+    d:{ pt:'Frango, mignon, calabresa, batata frita, vinagrete e farofa.',
+        es:'Pollo, mignon, chorizo, papas, vinagreta y farofa.',
+        en:'Chicken, mignon, sausage, fries, vinaigrette and crumbs.' } },
+  { id:'I015', cat:'petiscos', name:'Frango Passarinho', price:82.80,
+    d:{ pt:'Servidos com batatas fritas.', es:'Pollo crocante con papas fritas.', en:"Birdie's chicken with french fries." } },
+  { id:'I016', cat:'petiscos', name:'Lula a Dorê', price:119.80,
+    d:{ pt:'Servida com molho tártaro.', es:'Calamar con salsa tártara.', en:'Squid with tartar sauce.' } },
+  { id:'I017', cat:'petiscos', name:'Camarão empanado Sol e Mar', price:119.80,
+    d:{ pt:'Camarão empanado.', es:'Camarón rebozado.', en:'Breaded shrimp.' } },
+  { id:'I018', cat:'petiscos', name:'Camarão Finns', price:108.80, tags:['chef'],
+    d:{ pt:'Com chips de alho e óleo.',
+        es:'Camarón con chips de ajo y aceite.',
+        en:'Finns shrimp with garlic chips and oil.' } },
+  { id:'I019', cat:'petiscos', name:'Finns Maré Alta', price:162.80, tags:['chef'],
+    d:{ pt:'Combo: lula, camarão, isca de peixe, molho tártaro e rosé.',
+        es:'Combo: calamar, camarón, pescado, salsa tártara y rosé.',
+        en:'Combo: squid, shrimp, fish, tartar sauce and rose.' } },
+  { id:'I020', cat:'petiscos', name:'Wings Finns', price:79.80,
+    d:{ pt:'Asinhas de frango.', es:'Alitas de pollo.', en:'Chicken wings.' } },
+  { id:'I021', cat:'petiscos', name:"Finn's 4x4", price:94.80,
+    d:{ pt:'4 bolinhos mistos, 4 drumetes de frango, 4 costelinhas e 4 pastéis mistos.',
+        es:'4 bolitas mixtas, 4 alitas, 4 costillitas y 4 pastelitos.',
+        en:'4 mixed dumplings, 4 chicken drumsticks, 4 ribs and 4 mixed pastries.' } },
+
+  // CALDINHOS
+  { id:'I024', cat:'caldinhos', name:'Caldinho de Costela', price:42.80,
+    d:{ pt:'Acompanha cesta de pães.', es:'Con canasta de pan.', en:'Comes with bread basket.' } },
+  { id:'I025', cat:'caldinhos', name:'Caldinho de Camarão', price:49.80, tags:['chef'],
+    d:{ pt:'Acompanha cesta de pães.', es:'Con canasta de pan.', en:'Comes with bread basket.' } },
+  { id:'I026', cat:'caldinhos', name:'Caldinho de Feijão', price:38.80,
+    d:{ pt:'Acompanha cesta de pães.', es:'Con canasta de pan.', en:'Comes with bread basket.' } },
+
+  // SANDUÍCHES
+  { id:'I029', cat:'sanduiches', name:'Filé de Frango com Queijo', price:56.80,
+    d:{ pt:'Com abacaxi.', es:'Con piña.', en:'With pineapple.' } },
+  { id:'I030', cat:'sanduiches', name:'Filé de Carne com Queijo', price:66.80,
+    d:{ pt:'Filé mignon, queijo e abacaxi.', es:'Filet mignon, queso y piña.', en:'Beef tenderloin, cheese and pineapple.' } },
+  { id:'I031', cat:'sanduiches', name:'Burguer Finns', price:52.80,
+    d:{ pt:'Hambúrguer, queijo mussarela, alface e tomate.',
+        es:'Hamburguesa, mozzarella, lechuga y tomate.',
+        en:'Burger, mozzarella, lettuce and tomato.' } },
+  { id:'I032', cat:'sanduiches', name:'Duplo Burguer Finns', price:69.80, tags:['chef'],
+    d:{ pt:'Duas carnes, bacon, queijo mussarela, alface, tomate e ovo.',
+        es:'Doble carne, panceta, queso, lechuga, tomate y huevo.',
+        en:'Two patties, bacon, cheese, lettuce, tomato and egg.' } },
+  { id:'I033', cat:'sanduiches', name:'Sandwish Costela', price:64.80,
+    d:{ pt:'Costela suína e mussarela.', es:'Costilla de cerdo y mozzarella.', en:'Pork rib and mozzarella.' } },
+  { id:'I034', cat:'sanduiches', name:'Copacabana', price:59.80,
+    d:{ pt:'Hambúrguer 150g, pão australiano e queijo Cheddar.',
+        es:'Hamburguesa 150g, pan australiano y cheddar.',
+        en:'150g burger, australian bread and Cheddar.' } },
+  { id:'I035', cat:'sanduiches', name:'Vegetariano', price:49.80, tags:['veg'],
+    d:{ pt:'Rúcula, tomate, mussarela com molho de mostarda e mel.',
+        es:'Rúcula, tomate, mozzarella con salsa de mostaza y miel.',
+        en:'Arugula, tomato, cheese with honey mustard sauce.' } },
+
+  // SALADAS
+  { id:'I048', cat:'salada_int', name:'Salada Simples', price:28.20, tags:['veg'],
+    d:{ pt:'Alface, tomate e cebola.', es:'Lechuga, tomate y cebolla.', en:'Lettuce, tomato and onion.' } },
+  { id:'I049', cat:'salada_int', name:'Caesar com Frango', price:64.80,
+    d:{ pt:'Caesar com frango.', es:'César con pollo.', en:'Caesar with chicken.' } },
+  { id:'I050', cat:'salada_int', name:'Caesar com Salmão', price:84.80, tags:['chef'],
+    d:{ pt:'Caesar com salmão.', es:'César con salmón.', en:'Caesar with salmon.' } },
+  { id:'I051', cat:'salada_int', name:'Salada de Camarão', price:64.80,
+    d:{ pt:'Salada com camarão.', es:'Ensalada con camarón.', en:'Shrimp salad.' } },
+
+  // PRATOS EXECUTIVOS
+  { id:'I052', cat:'pratos_exec', name:'Mignon ou Costela 380g', price:64.80,
+    d:{ pt:'Filé mignon ou costela 380g, com arroz, feijão e batata frita.',
+        es:'Filet mignon o costilla 380g, con arroz, frijoles y papas.',
+        en:'Mignon or rib 380g, with rice, beans and fries.' } },
+  { id:'I053', cat:'pratos_exec', name:'Frango à Parmegiana', price:56.80,
+    d:{ pt:'Com arroz, feijão e batata frita.', es:'Con arroz, frijoles y papas.', en:'With rice, beans and fries.' } },
+  { id:'I054', cat:'pratos_exec', name:'Frango Grelhado', price:56.80,
+    d:{ pt:'Com arroz e batata frita.', es:'Con arroz y papas fritas.', en:'With rice and french fries.' } },
+  { id:'I055', cat:'pratos_exec', name:'Filet de frango grelhado', price:48.80,
+    d:{ pt:'Com arroz e batata frita.', es:'Con arroz y papas fritas.', en:'With rice and french fries.' } },
+  { id:'I056', cat:'pratos_exec', name:'Stroganoff de Frango', price:54.80,
+    d:{ pt:'Com arroz branco e batata frita.', es:'Con arroz blanco y papas fritas.', en:'With white rice and french fries.' } },
+  { id:'I057', cat:'pratos_exec', name:'Stroganoff de Carne', price:62.80,
+    d:{ pt:'Com arroz branco e batata frita.', es:'Con arroz blanco y papas fritas.', en:'With white rice and french fries.' } },
+  { id:'I058', cat:'pratos_exec', name:'Omelete com Salada', price:52.80,
+    d:{ pt:'Com queijo, presunto e tomate.', es:'Con queso, jamón y tomate.', en:'With cheese, ham and tomato.' } },
+
+  // MASSAS E RISOTO
+  { id:'I059', cat:'massas', name:'Espaguete com molho bolonhesa', price:62.80,
+    d:{ pt:'Espaguete com molho de tomate caseiro ou bolonhesa.',
+        es:'Espagueti con salsa de tomate o boloñesa.',
+        en:'Spaghetti with tomato or bolognese sauce.' } },
+  { id:'I060', cat:'massas', name:'Espaguete de Camarão', price:78.80, tags:['chef'],
+    d:{ pt:'Espaguete com camarão.', es:'Espagueti con camarón.', en:'Spaghetti with shrimp.' } },
+  { id:'I061', cat:'massas', name:'Risoto de Camarão', price:78.80, tags:['chef'],
+    d:{ pt:'Risoto cremoso de camarão.', es:'Risotto cremoso de camarón.', en:'Creamy shrimp risotto.' } },
+
+  // PIZZA
+  { id:'I062', cat:'pizza', name:'Pizza de Calabresa', price:69.80,
+    d:{ pt:'Pizza 26cm de calabresa.', es:'Pizza 26cm de chorizo.', en:'26cm pepperoni pizza.' } },
+  { id:'I063', cat:'pizza', name:'Pizza de Calabresa com Catupiry', price:64.80,
+    d:{ pt:'Pizza 26cm calabresa com Catupiry.', es:'Pizza 26cm chorizo con Catupiry.', en:'26cm pepperoni pizza with Catupiry.' } },
+  { id:'I064', cat:'pizza', name:'Pizza de Camarão com Catupiry', price:74.80, tags:['chef'],
+    d:{ pt:'Pizza 26cm camarão com Catupiry.', es:'Pizza 26cm camarón con Catupiry.', en:'26cm shrimp pizza with Catupiry.' } },
+  { id:'I065', cat:'pizza', name:'Pizza de Mussarela', price:64.80, tags:['veg'],
+    d:{ pt:'Pizza 26cm de mussarela.', es:'Pizza 26cm de mozzarella.', en:'26cm mozzarella pizza.' } },
+  { id:'I066', cat:'pizza', name:'Pizza Margherita', price:64.80, tags:['veg'],
+    d:{ pt:'Pizza 26cm com mussarela, tomate e manjericão.',
+        es:'Pizza 26cm con mozzarella, tomate y albahaca.',
+        en:'26cm pizza with mozzarella, tomato and basil.' } },
+
+  // SOBREMESA
+  { id:'I067', cat:'sobremesa', name:'Petit Gateau', price:39.90, tags:['chef'],
+    d:{ pt:'Doce de leite ou chocolate.', es:'Dulce de leche o chocolate.', en:'Dulce de leche or chocolate.' } },
+  { id:'I068', cat:'sobremesa', name:'Brownie com Sorvete', price:46.90,
+    d:{ pt:'Brownie com sorvete.', es:'Brownie con helado.', en:'Brownie with ice cream.' } },
+  { id:'I069', cat:'sobremesa', name:'Sundae', price:39.90,
+    d:{ pt:'Duas bolas de sorvete, calda, cereja e castanhas.',
+        es:'Dos bochas de helado, jarabe, cereza y castañas.',
+        en:'Two scoops of ice cream, syrup, cherry and chestnuts.' } },
+
+  // BEBIDAS
+  { id:'I101', cat:'int_bebidas', name:'Água (com ou sem gás)', price:7.90,
+    d:{ pt:'Água mineral.', es:'Agua mineral.', en:'Mineral water.' } },
+  { id:'I102', cat:'int_bebidas', name:'Água de Coco', price:11.00,
+    d:{ pt:'Água de coco.', es:'Agua de coco.', en:'Coconut water.' } },
+  { id:'I103', cat:'int_bebidas', name:'Água Tônica', price:10.00,
+    d:{ pt:'Água tônica.', es:'Agua tónica.', en:'Tonic water.' } },
+  { id:'I104', cat:'int_bebidas', name:'Refrigerante Lata', price:10.90,
+    d:{ pt:'Refrigerante em lata.', es:'Gaseosa en lata.', en:'Soft drink can.' } },
+  { id:'I105', cat:'int_bebidas', name:'Gatorade', price:17.80,
+    d:{ pt:'Isotônico.', es:'Isotónica.', en:'Sports drink.' } },
+  { id:'I106', cat:'int_bebidas', name:'Chá', price:11.90,
+    d:{ pt:'Chá quente.', es:'Té caliente.', en:'Hot tea.' } },
+  { id:'I107', cat:'int_bebidas', name:'Red Bull', price:18.90,
+    d:{ pt:'Energy drink: sugarfree, tropical ou melancia.',
+        es:'Energizante: sugarfree, tropical o sandía.',
+        en:'Energy drink: sugarfree, tropical or watermelon.' } },
+  { id:'I108', cat:'int_bebidas', name:'Café Expresso', price:11.80,
+    d:{ pt:'Café expresso.', es:'Café expreso.', en:'Espresso coffee.' } },
+  { id:'I109', cat:'int_bebidas', name:'Cappuccino', price:15.00,
+    d:{ pt:'Cappuccino.', es:'Cappuccino.', en:'Cappuccino.' } },
+
+  // SUCOS E LIMONADAS
+  { id:'I110', cat:'int_sucos', name:'Sucos da Estação 300ml', price:18.80,
+    d:{ pt:'Peça frutas da estação.', es:'Pedí frutas de temporada.', en:'Ask for seasonal fruit.' } },
+  { id:'I111', cat:'int_sucos', name:'Soda Italiana 300ml', price:36.80,
+    d:{ pt:'Água com gás, hortelã, essência à escolha e espuma.',
+        es:'Agua con gas, menta, esencia a elección y espuma.',
+        en:'Sparkling water, mint, essence of choice and foam.' } },
+  { id:'I112', cat:'int_sucos', name:'Batida sem álcool', price:34.80,
+    d:{ pt:'Batida sem álcool.', es:'Batida sin alcohol.', en:'Non-alcoholic smoothie.' } },
+
+  // CERVEJAS
+  { id:'I113', cat:'int_cervejas', name:'Chopp Caldereta', price:12.90,
+    d:{ pt:'Chopp de pressão.', es:'Cerveza tirada.', en:'Draft beer.' } },
+  { id:'I114', cat:'int_cervejas', name:'Long Neck Budweiser', price:15.90,
+    d:{ pt:'Long neck.', es:'Long neck.', en:'Long neck bottle.' } },
+  { id:'I115', cat:'int_cervejas', name:'Long Neck Malzbier', price:15.90,
+    d:{ pt:'Long neck.', es:'Long neck.', en:'Long neck bottle.' } },
+  { id:'I116', cat:'int_cervejas', name:'Long Neck Stella Artois', price:15.90,
+    d:{ pt:'Long neck.', es:'Long neck.', en:'Long neck bottle.' } },
+  { id:'I117', cat:'int_cervejas', name:'Long Neck Heineken', price:17.90,
+    d:{ pt:'Long neck.', es:'Long neck.', en:'Long neck bottle.' } },
+  { id:'I118', cat:'int_cervejas', name:'Corona Zero', price:17.90,
+    d:{ pt:'Long neck sem álcool.', es:'Long neck sin alcohol.', en:'Non-alcoholic long neck.' } },
+  { id:'I119', cat:'int_cervejas', name:'Spaten', price:17.90,
+    d:{ pt:'Long neck.', es:'Long neck.', en:'Long neck bottle.' } },
+  { id:'I120', cat:'int_cervejas', name:'Latão', price:15.00,
+    d:{ pt:'Latão.', es:'Lata grande.', en:'Big can.' } },
+  { id:'I121', cat:'int_cervejas', name:'Antártica Original 600ml', price:20.90,
+    d:{ pt:'Garrafa 600ml.', es:'Botella 600ml.', en:'600ml bottle.' } },
+  { id:'I122', cat:'int_cervejas', name:'Stella Artois 600ml', price:28.90,
+    d:{ pt:'Garrafa 600ml.', es:'Botella 600ml.', en:'600ml bottle.' } },
+  { id:'I123', cat:'int_cervejas', name:'Colorado 600ml', price:37.80,
+    d:{ pt:'Garrafa 600ml.', es:'Botella 600ml.', en:'600ml bottle.' } },
+  { id:'I124', cat:'int_cervejas', name:'Corona 600ml', price:31.80,
+    d:{ pt:'Garrafa 600ml.', es:'Botella 600ml.', en:'600ml bottle.' } },
+
+  // DESTILADOS (doses)
+  { id:'I130', cat:'int_destilados', name:'Cachaça 51', price:19.00,
+    d:{ pt:'Dose.', es:'Medida.', en:'Shot.' } },
+  { id:'I131', cat:'int_destilados', name:'Vodka Smirnoff', price:29.80,
+    d:{ pt:'Dose.', es:'Medida.', en:'Shot.' } },
+  { id:'I132', cat:'int_destilados', name:'Vodka Absolut', price:41.80,
+    d:{ pt:'Dose.', es:'Medida.', en:'Shot.' } },
+  { id:'I133', cat:'int_destilados', name:'Tequila Ouro ou Prata', price:45.80,
+    d:{ pt:'Dose.', es:'Medida.', en:'Shot.' } },
+  { id:'I134', cat:'int_destilados', name:'Whisky 8 anos Red Label', price:37.80,
+    d:{ pt:'Dose.', es:'Medida.', en:'Shot.' } },
+  { id:'I135', cat:"int_destilados", name:"Jack Daniel's", price:44.80,
+    d:{ pt:'Dose.', es:'Medida.', en:'Shot.' } },
+  { id:'I136', cat:'int_destilados', name:'Gin Nacional', price:31.90,
+    d:{ pt:'Dose.', es:'Medida.', en:'Shot.' } },
+  { id:'I137', cat:'int_destilados', name:'Gin Bombay', price:39.90,
+    d:{ pt:'Dose.', es:'Medida.', en:'Shot.' } },
+  { id:'I138', cat:'int_destilados', name:'Campari', price:31.90,
+    d:{ pt:'Dose.', es:'Medida.', en:'Shot.' } },
+  { id:'I139', cat:'int_destilados', name:'Bacardi Ouro ou Prata', price:29.80,
+    d:{ pt:'Dose.', es:'Medida.', en:'Shot.' } },
+  { id:'I140', cat:'int_destilados', name:'Whisky 12 anos', price:43.80,
+    d:{ pt:'Dose.', es:'Medida.', en:'Shot.' } },
+  { id:'I141', cat:'int_destilados', name:'Licor', price:43.80,
+    d:{ pt:'Dose.', es:'Medida.', en:'Shot.' } },
+  { id:'I142', cat:'int_destilados', name:'Fernet Branca', price:53.80,
+    d:{ pt:'Um clássico Rio-argentino.', es:'Un clásico Río-argentino.', en:'A classic Rio-Argentine drink.' } },
+  { id:'I143', cat:'int_destilados', name:'Pisco Chi Chi Le Le Le', price:39.90,
+    d:{ pt:'Copo 300ml.', es:'Copa 300ml.', en:'300ml glass.' } },
+
+  // CAIPIRINHAS
+  { id:'I150', cat:'int_caipirinhas', name:'Caipirinha Limão', price:20.90,
+    d:{ pt:'Caipirinha tradicional de limão.', es:'Caipirinha clásica de limón.', en:'Classic lemon caipirinha.' } },
+  { id:'I151', cat:'int_caipirinhas', name:'Caipirinha Sabores', price:30.80,
+    d:{ pt:'Maracujá, morango, abacaxi, kiwi, tangerina, ou limão com rapadura e hortelã.',
+        es:'Maracuyá, frutilla, piña, kiwi, mandarina o limón con rapadura y menta.',
+        en:'Passion fruit, strawberry, pineapple, kiwi, tangerine, or lemon with mint and rapadura.' } },
+  { id:'I152', cat:'int_caipirinhas', name:'Caipvodka Nacional ou Saquê', price:36.80,
+    d:{ pt:'Mesmos sabores da caipirinha.', es:'Mismos sabores que la caipirinha.', en:'Same flavors as caipirinha.' } },
+  { id:'I153', cat:'int_caipirinhas', name:'Caipvodka Tropical', price:41.80, tags:['chef'],
+    d:{ pt:'Abacaxi, vodka, xarope de gengibre, Curaçau Blue e hortelã.',
+        es:'Piña, vodka, jarabe de jengibre, Curaçau Blue y menta.',
+        en:'Pineapple, vodka, ginger syrup, Blue Curaçao and mint.' } },
+  { id:'I154', cat:'int_caipirinhas', name:'Caipvodka Importada', price:46.80,
+    d:{ pt:'Mesmos sabores, vodka importada.', es:'Mismos sabores, vodka importada.', en:'Same flavors, imported vodka.' } },
+
+  // COMBOS
+  { id:'I160', cat:'int_combos', name:'Vodka Smirnoff + 5 Red Bull', price:399.00,
+    d:{ pt:'Escolha o sabor do Red Bull.', es:'Elegí el sabor del Red Bull.', en:'Choose the Red Bull flavor.' } },
+  { id:'I161', cat:'int_combos', name:'Vodka Absolut + 5 Red Bull', price:499.00,
+    d:{ pt:'Escolha o sabor do Red Bull.', es:'Elegí el sabor del Red Bull.', en:'Choose the Red Bull flavor.' } },
+  { id:'I162', cat:'int_combos', name:'Whisky Red Label + 5 Red Bull', price:499.00,
+    d:{ pt:'Escolha o sabor do Red Bull.', es:'Elegí el sabor del Red Bull.', en:'Choose the Red Bull flavor.' } },
+  { id:'I163', cat:'int_combos', name:"Whisky Jack Daniel's ou Black Label + 5 Red Bull", price:599.00, tags:['chef'],
+    d:{ pt:'Escolha o sabor do Red Bull.', es:'Elegí el sabor del Red Bull.', en:'Choose the Red Bull flavor.' } },
+  { id:'I164', cat:'int_combos', name:'Gin Nacional + 5 Tônica', price:399.00,
+    d:{ pt:'Com tônica.', es:'Con tónica.', en:'With tonic water.' } },
+  { id:'I165', cat:'int_combos', name:'Gin Bombay + 5 Tônica', price:540.00,
+    d:{ pt:'Com tônica.', es:'Con tónica.', en:'With tonic water.' } },
+
+  // DRINKS COM GIN
+  { id:'I170', cat:'int_gindrinks', name:'Gin Amora', price:45.80,
+    d:{ pt:'Gin, água tônica, limão siciliano, amora e hortelã.',
+        es:'Gin, tónica, limón siciliano, mora y menta.',
+        en:'Gin, tonic, sicilian lemon, blackberry and mint.' } },
+  { id:'I171', cat:'int_gindrinks', name:'Gin Morango', price:45.80,
+    d:{ pt:'Gin, água tônica e morango.',
+        es:'Gin, tónica y frutilla.',
+        en:'Gin, tonic and strawberry.' } },
+  { id:'I172', cat:'int_gindrinks', name:'Gin Abacaxi', price:45.80,
+    d:{ pt:'Gin, tônica, abacaxi, limão, hortelã e Curaçau Blue.',
+        es:'Gin, tónica, piña, limón, menta y Curaçau Blue.',
+        en:'Gin, tonic, pineapple, lemon, mint and Blue Curaçao.' } },
+  { id:'I173', cat:'int_gindrinks', name:'Tropical Gin', price:45.90,
+    d:{ pt:'Gin, laranja e Red Bull Tropical.', es:'Gin, naranja y Red Bull Tropical.', en:'Gin, orange and Tropical Red Bull.' } },
+  { id:'I174', cat:'int_gindrinks', name:'Gin Melancia', price:45.90,
+    d:{ pt:'Gin e Red Bull Melancia.', es:'Gin y Red Bull Sandía.', en:'Gin and Watermelon Red Bull.' } },
+  { id:'I175', cat:'int_gindrinks', name:'Gin Três Cítricas', price:45.80,
+    d:{ pt:'Gin, água tônica, limão taiti, limão siciliano e laranja.',
+        es:'Gin, tónica, limón taití, siciliano y naranja.',
+        en:'Gin, tonic, tahiti lemon, sicilian lemon and orange.' } },
+  { id:'I176', cat:'int_gindrinks', name:'Gin Tônica', price:45.80, tags:['chef'],
+    d:{ pt:'Gin, água tônica, alecrim e zimbros.',
+        es:'Gin, tónica, romero y enebro.',
+        en:'Gin, tonic, rosemary and juniper.' } },
+  { id:'I177', cat:'int_gindrinks', name:'Gin Maracujá', price:47.80,
+    d:{ pt:'Gin, água tônica e maracujá.', es:'Gin, tónica y maracuyá.', en:'Gin, tonic and passion fruit.' } },
+  { id:'I178', cat:'int_gindrinks', name:'Gin Frutas Vermelhas', price:52.80,
+    d:{ pt:'Gin, tônica, frutas vermelhas e espuma de gengibre.',
+        es:'Gin, tónica, frutos rojos y espuma de jengibre.',
+        en:'Gin, tonic, red fruits and ginger foam.' } },
+
+  // CLÁSSICOS
+  { id:'I180', cat:'int_classicos', name:'Bramble', price:45.80,
+    d:{ pt:'Gin, amora e hortelã.', es:'Gin, mora y menta.', en:'Gin, blackberry and mint.' } },
+  { id:'I181', cat:'int_classicos', name:'Pina Colada', price:45.80,
+    d:{ pt:'Rum Malibu, abacaxi e leite condensado.',
+        es:'Rum Malibu, piña y leche condensada.',
+        en:'Malibu rum, pineapple and condensed milk.' } },
+  { id:'I182', cat:'int_classicos', name:'Moscow Mule', price:45.80, tags:['chef'],
+    d:{ pt:'Vodka, limão, açúcar e espuma de gengibre.',
+        es:'Vodka, limón, azúcar y espuma de jengibre.',
+        en:'Vodka, lemon, sugar and ginger foam.' } },
+  { id:'I183', cat:'int_classicos', name:'Negroni', price:52.80,
+    d:{ pt:'Gin, vermute tinto, Campari e laranja.',
+        es:'Gin, vermut tinto, Campari y naranja.',
+        en:'Gin, red vermouth, Campari and orange.' } },
+  { id:'I184', cat:'int_classicos', name:'Mojito', price:45.80,
+    d:{ pt:'Rum, hortelã, limão, açúcar e água com gás.',
+        es:'Ron, menta, limón, azúcar y agua con gas.',
+        en:'Rum, mint, lemon, sugar and sparkling water.' } },
+  { id:'I185', cat:'int_classicos', name:'Sex on the Beach', price:45.80,
+    d:{ pt:'Vodka, licor de pêssego, suco de laranja e groselha.',
+        es:'Vodka, licor de durazno, jugo de naranja y grosella.',
+        en:'Vodka, peach liqueur, orange juice and blackcurrant.' } },
+  { id:'I186', cat:'int_classicos', name:'Whisky Sour', price:45.80,
+    d:{ pt:'American Whisky, suco de limão e açúcar.',
+        es:'American Whisky, jugo de limón y azúcar.',
+        en:'American whisky, lemon juice and sugar.' } },
+  { id:'I187', cat:'int_classicos', name:'Cosmopolitan', price:52.80,
+    d:{ pt:'Vodka, cranberry, limão siciliano e Cointreau.',
+        es:'Vodka, cranberry, limón siciliano y Cointreau.',
+        en:'Vodka, cranberry, sicilian lemon and Cointreau.' } },
+  { id:'I188', cat:'int_classicos', name:'Margarita', price:45.80,
+    d:{ pt:'Cointreau, suco de limão e tequila.',
+        es:'Cointreau, jugo de limón y tequila.',
+        en:'Cointreau, lime juice and tequila.' } },
+  { id:'I189', cat:'int_classicos', name:'Cuba Libre', price:45.80,
+    d:{ pt:'Rum, Pepsi e limão.', es:'Ron, Pepsi y limón.', en:'Rum, Pepsi and lemon.' } },
+
+  // SPRITZ
+  { id:'I190', cat:'int_spritz', name:'Aperol Spritz', price:57.80, tags:['chef'],
+    d:{ pt:'Aperol, espumante, água com gás e laranja.',
+        es:'Aperol, espumante, agua con gas y naranja.',
+        en:'Aperol, sparkling wine, sparkling water and orange.' } },
+  { id:'I191', cat:'int_spritz', name:'Clericot na taça', price:57.80,
+    d:{ pt:'Clericot na taça.', es:'Clericó en copa.', en:'Clericot cup.' } },
+  { id:'I192', cat:'int_spritz', name:'Garibaldi', price:57.80,
+    d:{ pt:'Campari, gelo e suco de laranja.', es:'Campari, hielo y jugo de naranja.', en:'Campari, ice and orange juice.' } },
+
+  // VINHOS — consultar
+  { id:'I-WINE', cat:'int_vinhos', name:'Vinhos — Garrafa', price:null, special:'chef-ask',
+    d:{ pt:'Carta de vinhos: consulte o garçom.',
+        es:'Carta de vinos: consultá al mozo.',
+        en:'Wine list: ask the waiter.' } },
 ];
 
 // ============================================================
@@ -873,6 +1317,7 @@ export default function App() {
   const [lang, setLang] = useState('pt');
   const [theme, setTheme] = useState('dark');
   const [activeCat, setActiveCat] = useState('all');
+  const [activeMenu, setActiveMenu] = useState('sushi'); // 'sushi' | 'internacional'
   const [query, setQuery] = useState('');
   const [scrolled, setScrolled] = useState(false);
   const [scrollY, setScrollY] = useState(0);
@@ -881,6 +1326,7 @@ export default function App() {
   const [isMobile, setIsMobile] = useState(false);
   const [bgLoaded, setBgLoaded] = useState({ dark: false, light: false });
   const menuRef = useRef(null);
+  const destaquesRef = useRef(null);
 
   const t = i18n[lang];
   const isDark = theme === 'dark';
@@ -924,23 +1370,33 @@ export default function App() {
   // Nav controls sit over the dark hero photo only on mobile while at the top → light styling
   const navOverPhoto = isMobile && !scrolled;
 
+  // Featured (Destaques do Chef) stays sushi-only (chef-tagged sushi with photos)
   const featured = useMemo(() =>
-    menu.filter(m => m.tags?.includes('chef') && m.price != null && PHOTOS[m.id]).slice(0, 6),
+    menu.filter(m => kindOf(m) === 'sushi' && m.tags?.includes('chef') && m.price != null && PHOTOS[m.id]).slice(0, 6),
   []);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return menu.filter(m => {
+      if (kindOf(m) !== activeMenu) return false;
       const catOk = activeCat === 'all' || m.cat === activeCat;
       if (!q) return catOk;
       const text = (m.name + ' ' + m.d[lang]).toLowerCase();
       return catOk && text.includes(q);
     });
-  }, [activeCat, query, lang]);
+  }, [activeCat, activeMenu, query, lang]);
 
-  const totalDishesToday = useMemo(() => menu.filter(m => m.price != null || m.special).length, []);
+  const activeCategories = activeMenu === 'sushi' ? CATEGORIES : INT_CATEGORIES;
+
+  const totalDishesToday = useMemo(
+    () => menu.filter(m => kindOf(m) === activeMenu && (m.price != null || m.special)).length,
+    [activeMenu]
+  );
 
   const scrollToMenu = () => menuRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const scrollToDestaques = () => destaquesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const openSushi = () => { setActiveMenu('sushi'); setActiveCat('all'); requestAnimationFrame(scrollToDestaques); };
+  const openInternacional = () => { setActiveMenu('internacional'); setActiveCat('all'); requestAnimationFrame(scrollToMenu); };
 
   // ============================================================
   // Theme-driven palette
@@ -1065,18 +1521,18 @@ export default function App() {
               {/* Two menus aligned under each brand: FINNS (gastronomia internacional) · CHILL OUT (sushi) */}
               <div className="mt-5 grid grid-cols-2 gap-3">
                 <button
-                  onClick={scrollToMenu}
+                  onClick={openInternacional}
                   className="rounded-2xl px-3 py-3 text-center bg-amber-200 text-stone-950 active:scale-95 transition-transform"
                 >
-                  <span className="block text-[8px] tracking-[0.22em] uppercase opacity-70">Cardápio</span>
-                  <span className="block text-[13px] font-semibold leading-tight mt-0.5">Gastronomia Internacional</span>
+                  <span className="block text-[8px] tracking-[0.22em] uppercase opacity-70">{t.menuEyebrow}</span>
+                  <span className="block text-[13px] font-semibold leading-tight mt-0.5">{t.menuInternacional}</span>
                 </button>
                 <button
-                  onClick={scrollToMenu}
+                  onClick={openSushi}
                   className="rounded-2xl px-3 py-3 text-center bg-amber-200 text-stone-950 active:scale-95 transition-transform"
                 >
-                  <span className="block text-[8px] tracking-[0.22em] uppercase opacity-70">Cardápio</span>
-                  <span className="block text-[13px] font-semibold leading-tight mt-0.5">Sushi</span>
+                  <span className="block text-[8px] tracking-[0.22em] uppercase opacity-70">{t.menuEyebrow}</span>
+                  <span className="block text-[13px] font-semibold leading-tight mt-0.5">{t.menuSushi}</span>
                 </button>
               </div>
             </div>
@@ -1122,7 +1578,7 @@ export default function App() {
         </section>
 
         {/* ============== DESTAQUES DO CHEF ============== */}
-        <section className={`relative ${sectionBg} border-t ${borderClr}`}>
+        <section ref={destaquesRef} className={`relative ${sectionBg} border-t ${borderClr}`}>
           <div className="max-w-6xl mx-auto px-5 py-20 md:py-32">
             <Reveal>
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-8 mb-10 md:mb-16">
@@ -1181,6 +1637,23 @@ export default function App() {
               </div>
             </div>
 
+            {/* Menu kind tabs — Sushi (Chill Out) | Gastronomia Internacional (Finns) */}
+            <div className="mb-8 flex justify-center">
+              <div className={`inline-flex rounded-full p-1 border ${isDark ? 'border-stone-800 bg-stone-950/60' : 'border-stone-300 bg-white/70'}`}>
+                {[['sushi', t.menuSushi], ['internacional', t.menuInternacional]].map(([k, label]) => (
+                  <button
+                    key={k}
+                    onClick={() => { setActiveMenu(k); setActiveCat('all'); setQuery(''); }}
+                    className={`px-4 sm:px-5 py-2 rounded-full text-[11px] sm:text-xs tracking-[0.15em] uppercase font-medium transition-colors ${
+                      activeMenu === k
+                        ? (isDark ? 'bg-amber-200 text-stone-950' : 'bg-stone-900 text-amber-100')
+                        : (isDark ? 'text-stone-400 hover:text-stone-200' : 'text-stone-600 hover:text-stone-900')
+                    }`}
+                  >{label}</button>
+                ))}
+              </div>
+            </div>
+
             {/* Category bar — sticky; sits just below the header, or at the very top when the header is hidden */}
             <div
               style={{ top: hideHeader ? 0 : 56 }}
@@ -1196,7 +1669,7 @@ export default function App() {
                       : `${mutedClr} border-transparent hover:${isDark ? 'text-stone-200' : 'text-stone-900'}`
                   }`}
                 >{t.all}</button>
-                {CATEGORIES.map(c => (
+                {activeCategories.map(c => (
                   <button
                     key={c}
                     onClick={() => setActiveCat(c)}
@@ -1215,7 +1688,7 @@ export default function App() {
                 <p className="text-3xl mb-2">— {t.noResults} —</p>
               </div>
             ) : activeCat === 'all' ? (
-              CATEGORIES.map(cat => {
+              activeCategories.map(cat => {
                 const items = filtered.filter(m => m.cat === cat);
                 if (!items.length) return null;
                 return (
