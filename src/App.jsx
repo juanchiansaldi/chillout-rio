@@ -10,8 +10,8 @@ import { Search, MapPin, MessageCircle, Instagram, Clock, Star, Flame, ChevronRi
 // in vite.config.js — necessary for GitHub Pages subpath deploys.
 // ============================================================
 const BASE = (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL) || '/';
-const BG_DARK   = BASE + 'fotodark.webp';   // desktop, dark theme
-const BG_LIGHT  = BASE + 'fotolight.webp';  // desktop, light theme
+const BG_DARK   = BASE + 'fondo.png';       // desktop, dark theme (same beach photo)
+const BG_LIGHT  = BASE + 'fondo.png';       // desktop, light theme (same beach photo)
 const BG_MOBILE = BASE + 'fotofea.jpeg';    // mobile, both themes
 const SOMOS_CARNAVAL = BASE + 'somoscarnaval.png';
 const LOGO_DUO_DARK  = BASE + 'logo1.jpeg';  // FINNS | CHILL OUT, white on black → use over dark backgrounds (screen-blended)
