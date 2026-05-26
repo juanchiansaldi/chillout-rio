@@ -40,7 +40,7 @@ const i18n = {
     all: 'Todos', noResults: 'Nenhum prato encontrado',
     address: 'Av. Atlântica, posto 13', addressLine2: 'Copacabana — Rio de Janeiro · Brasil',
     addressLabel: 'Endereço', hoursLabel: 'Horário',
-    hoursWeek: 'Seg a Qui · 12h–00h', hoursWeekend: 'Sex a Dom · 12h–00h',
+    hoursWeek: 'Seg a Qui · 11h–00h', hoursWeekend: 'Sex a Dom · 11h–00h',
     whatsappLabel: 'WhatsApp', whatsappSub: 'Reservas e dúvidas',
     reviewLabel: 'Deixe uma review', reviewSub: 'Avalie no Google Maps',
     igLabel: 'Instagram', igSub: 'Pôr-do-sol, agenda',
@@ -92,7 +92,7 @@ const i18n = {
     all: 'Todos', noResults: 'No se encontraron platos',
     address: 'Av. Atlântica, posto 13', addressLine2: 'Copacabana — Río de Janeiro · Brasil',
     addressLabel: 'Dirección', hoursLabel: 'Horario',
-    hoursWeek: 'Lun a Jue · 12h–00h', hoursWeekend: 'Vie a Dom · 12h–00h',
+    hoursWeek: 'Lun a Jue · 11h–00h', hoursWeekend: 'Vie a Dom · 11h–00h',
     whatsappLabel: 'WhatsApp', whatsappSub: 'Reservas y consultas',
     reviewLabel: 'Dejá una review', reviewSub: 'Calificá en Google Maps',
     igLabel: 'Instagram', igSub: 'Atardecer, agenda',
@@ -144,7 +144,7 @@ const i18n = {
     all: 'All', noResults: 'No dishes found',
     address: 'Av. Atlântica, posto 13', addressLine2: 'Copacabana — Rio de Janeiro · Brazil',
     addressLabel: 'Address', hoursLabel: 'Hours',
-    hoursWeek: 'Mon–Thu · 12pm–12am', hoursWeekend: 'Fri–Sun · 12pm–12am',
+    hoursWeek: 'Mon–Thu · 11am–12am', hoursWeekend: 'Fri–Sun · 11am–12am',
     whatsappLabel: 'WhatsApp', whatsappSub: 'Reservations & questions',
     reviewLabel: 'Leave a review', reviewSub: 'Rate us on Google Maps',
     igLabel: 'Instagram', igSub: 'Sunset, events',
@@ -978,8 +978,8 @@ function useLiveStatus() {
   }, []);
   const day = now.getDay(); // 0=Sun
   const hour = now.getHours() + now.getMinutes() / 60;
-  // Open 12pm–midnight every day
-  const isOpen = hour >= 12;
+  // Open 11am–midnight every day
+  const isOpen = hour >= 11;
   const closesText = '00h';
   return { isOpen, closesAt: closesText, day };
 }
@@ -987,10 +987,12 @@ function useLiveStatus() {
 // ============================================================
 // Small UI atoms
 // ============================================================
-// `over` = controls sit over the dark hero photo (mobile, not scrolled) → force light/high-contrast colors
+// `over` = controls sit over the hero photo (header has no bg yet).
+// Mobile hero photo is DARK → force light/white controls.
+// Desktop hero photo is BRIGHT → force dark/black controls.
 function LangSwitcher({ lang, setLang, theme, over }) {
   const opts = [['pt','PT'],['es','ES'],['en','EN']];
-  const sep = over ? 'text-white/40' : (theme === 'dark' ? 'text-stone-600' : 'text-stone-400');
+  const sep = over ? 'text-white/40 md:text-stone-900/40' : (theme === 'dark' ? 'text-stone-600' : 'text-stone-400');
   return (
     <div className="inline-flex items-center gap-3 text-[11px] tracking-[0.15em] font-medium">
       {opts.map(([k,l], i) => (
@@ -1000,8 +1002,8 @@ function LangSwitcher({ lang, setLang, theme, over }) {
             onClick={() => setLang(k)}
             className={`transition-colors ${
               lang === k
-                ? (over ? 'text-amber-300' : (theme === 'dark' ? 'text-amber-200' : 'text-stone-900'))
-                : (over ? 'text-white/75 hover:text-white' : (theme === 'dark' ? 'text-stone-500 hover:text-stone-300' : 'text-stone-400 hover:text-stone-700'))
+                ? (over ? 'text-amber-300 md:text-stone-900' : (theme === 'dark' ? 'text-amber-200' : 'text-stone-900'))
+                : (over ? 'text-white/75 hover:text-white md:text-stone-700 md:hover:text-stone-900' : (theme === 'dark' ? 'text-stone-500 hover:text-stone-300' : 'text-stone-400 hover:text-stone-700'))
             }`}
           >{l}</button>
         </React.Fragment>
@@ -1018,7 +1020,7 @@ function ThemeToggle({ over }) {
       aria-label="Toggle theme"
       className={`relative inline-flex items-center justify-center w-9 h-9 rounded-full border transition-all ${
         over
-          ? 'border-white/45 text-white hover:border-white'
+          ? 'border-white/45 text-white hover:border-white md:border-stone-900/50 md:text-stone-900 md:hover:border-stone-900'
           : (theme === 'dark'
             ? 'border-stone-700 hover:border-amber-200/40 text-amber-200/80'
             : 'border-stone-300 hover:border-stone-900 text-stone-700')
@@ -1312,7 +1314,7 @@ export default function App() {
   const [lang, setLang] = useState('pt');
   const [theme, setTheme] = useState('dark');
   const [activeCat, setActiveCat] = useState('all');
-  const [activeMenu, setActiveMenu] = useState('sushi'); // 'sushi' | 'internacional'
+  const [activeMenu, setActiveMenu] = useState('internacional'); // 'sushi' | 'internacional' — Finns is the default
   const [query, setQuery] = useState('');
   const [scrolled, setScrolled] = useState(false);
   const [scrollY, setScrollY] = useState(0);
@@ -1362,8 +1364,9 @@ export default function App() {
     return () => mq.removeEventListener('change', update);
   }, []);
 
-  // Nav controls sit over the dark hero photo only on mobile while at the top → light styling
-  const navOverPhoto = isMobile && !scrolled;
+  // Nav controls sit over the hero photo whenever the header has no bg yet (at the top).
+  // Mobile photo is dark → light controls; desktop photo is bright → dark controls.
+  const navOverPhoto = !scrolled;
   // Desktop hero is always rendered as the LIGHT version regardless of the theme toggle
   // (the photo is bright; dark text reads on it). The theme toggle still affects the menu below.
   const heroIsDark = isMobile ? isDark : false;
@@ -1494,7 +1497,7 @@ export default function App() {
           <img
             src={SOMOS_CARNAVAL}
             alt="Somos Carnaval Eterno no Rio"
-            className="hidden md:block absolute left-6 lg:left-12 top-1/2 -translate-y-1/2 w-44 lg:w-56 xl:w-64 z-10 select-none pointer-events-none invert [filter:drop-shadow(0_2px_8px_rgba(255,255,255,0.45))]"
+            className="hidden md:block absolute left-6 lg:left-12 top-1/2 -translate-y-1/2 w-44 lg:w-56 xl:w-64 z-10 select-none pointer-events-none [filter:invert(1)_drop-shadow(0_2px_8px_rgba(255,255,255,0.55))]"
           />
 
           <div className="relative flex-1 flex flex-col">
@@ -1611,7 +1614,7 @@ export default function App() {
             {/* Brand tabs — same shape as the menu tabs (single source of truth: activeMenu) */}
             <div className="mb-10 md:mb-12 flex justify-center">
               <div className={`inline-flex rounded-full p-1 border ${isDark ? 'border-stone-800 bg-stone-950/60' : 'border-stone-300 bg-white/70'}`}>
-                {[['sushi', `Chill Out · ${t.menuSushi}`], ['internacional', `Finns · ${t.menuInternacional}`]].map(([k, label]) => (
+                {[['internacional', `Finns · ${t.menuInternacional}`], ['sushi', `Chill Out · ${t.menuSushi}`]].map(([k, label]) => (
                   <button
                     key={k}
                     onClick={() => { setActiveMenu(k); setActiveCat('all'); setQuery(''); }}
@@ -1669,7 +1672,7 @@ export default function App() {
             {/* Menu kind tabs — Sushi (Chill Out) | Gastronomia Internacional (Finns) */}
             <div className="mb-8 flex justify-center">
               <div className={`inline-flex rounded-full p-1 border ${isDark ? 'border-stone-800 bg-stone-950/60' : 'border-stone-300 bg-white/70'}`}>
-                {[['sushi', t.menuSushi], ['internacional', t.menuInternacional]].map(([k, label]) => (
+                {[['internacional', t.menuInternacional], ['sushi', t.menuSushi]].map(([k, label]) => (
                   <button
                     key={k}
                     onClick={() => { setActiveMenu(k); setActiveCat('all'); setQuery(''); }}
