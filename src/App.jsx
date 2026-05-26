@@ -40,7 +40,7 @@ const i18n = {
     all: 'Todos', noResults: 'Nenhum prato encontrado',
     address: 'Av. Atlântica, posto 13', addressLine2: 'Copacabana — Rio de Janeiro · Brasil',
     addressLabel: 'Endereço', hoursLabel: 'Horário',
-    hoursWeek: 'Seg a Qui · 12h–23h', hoursWeekend: 'Sex a Dom · 12h–00h',
+    hoursWeek: 'Seg a Qui · 12h–00h', hoursWeekend: 'Sex a Dom · 12h–00h',
     whatsappLabel: 'WhatsApp', whatsappSub: 'Reservas e dúvidas',
     reviewLabel: 'Deixe uma review', reviewSub: 'Avalie no Google Maps',
     igLabel: 'Instagram', igSub: 'Pôr-do-sol, agenda',
@@ -92,7 +92,7 @@ const i18n = {
     all: 'Todos', noResults: 'No se encontraron platos',
     address: 'Av. Atlântica, posto 13', addressLine2: 'Copacabana — Río de Janeiro · Brasil',
     addressLabel: 'Dirección', hoursLabel: 'Horario',
-    hoursWeek: 'Lun a Jue · 12h–23h', hoursWeekend: 'Vie a Dom · 12h–00h',
+    hoursWeek: 'Lun a Jue · 12h–00h', hoursWeekend: 'Vie a Dom · 12h–00h',
     whatsappLabel: 'WhatsApp', whatsappSub: 'Reservas y consultas',
     reviewLabel: 'Dejá una review', reviewSub: 'Calificá en Google Maps',
     igLabel: 'Instagram', igSub: 'Atardecer, agenda',
@@ -144,7 +144,7 @@ const i18n = {
     all: 'All', noResults: 'No dishes found',
     address: 'Av. Atlântica, posto 13', addressLine2: 'Copacabana — Rio de Janeiro · Brazil',
     addressLabel: 'Address', hoursLabel: 'Hours',
-    hoursWeek: 'Mon–Thu · 12pm–11pm', hoursWeekend: 'Fri–Sun · 12pm–12am',
+    hoursWeek: 'Mon–Thu · 12pm–12am', hoursWeekend: 'Fri–Sun · 12pm–12am',
     whatsappLabel: 'WhatsApp', whatsappSub: 'Reservations & questions',
     reviewLabel: 'Leave a review', reviewSub: 'Rate us on Google Maps',
     igLabel: 'Instagram', igSub: 'Sunset, events',
@@ -978,14 +978,9 @@ function useLiveStatus() {
   }, []);
   const day = now.getDay(); // 0=Sun
   const hour = now.getHours() + now.getMinutes() / 60;
-  // Weekend = Fri(5), Sat(6), Sun(0)
-  const isWeekend = day === 5 || day === 6 || day === 0;
-  const closesAt = isWeekend ? 25 : 23; // 25 = 1am next day
-  const isOpen = (hour >= 12 && hour < (isWeekend ? 24 : 23))
-              || (day === 6 && hour < 1) // Sat after midnight (was Fri night)
-              || (day === 0 && hour < 1) // Sun after midnight
-              || (day === 1 && hour < 1); // Mon after midnight (was Sun)
-  const closesText = isWeekend ? '00h' : '23h';
+  // Open 12pm–midnight every day
+  const isOpen = hour >= 12;
+  const closesText = '00h';
   return { isOpen, closesAt: closesText, day };
 }
 
@@ -1056,7 +1051,7 @@ function LiveBadge({ t, theme }) {
   const { isOpen, closesAt } = useLiveStatus();
   return (
     <span className={`inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border text-[11px] tracking-[0.15em] uppercase backdrop-blur-sm ${
-      theme === 'dark' ? 'border-stone-700 text-stone-300' : 'border-white/35 text-white/90 bg-black/15'
+      theme === 'dark' ? 'border-stone-700 text-stone-300' : 'border-stone-900/30 text-stone-900 bg-white/50'
     }`}>
       <span className="relative flex h-2 w-2">
         <span className={`absolute inline-flex h-full w-full rounded-full ${isOpen ? 'bg-emerald-400' : 'bg-stone-500'} animate-ping opacity-50`}></span>
@@ -1323,7 +1318,7 @@ export default function App() {
   const [scrollY, setScrollY] = useState(0);
   const [hideHeader, setHideHeader] = useState(false);
   const lastScrollY = useRef(0);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches);
   const [bgLoaded, setBgLoaded] = useState({ dark: false, light: false });
   const menuRef = useRef(null);
   const destaquesRef = useRef(null);
@@ -1369,6 +1364,9 @@ export default function App() {
 
   // Nav controls sit over the dark hero photo only on mobile while at the top → light styling
   const navOverPhoto = isMobile && !scrolled;
+  // Desktop hero is always rendered as the LIGHT version regardless of the theme toggle
+  // (the photo is bright; dark text reads on it). The theme toggle still affects the menu below.
+  const heroIsDark = isMobile ? isDark : false;
 
   // Sushi destaques (Chill Out) — chef-tagged sushi with photos
   const featuredSushi = useMemo(() =>
@@ -1448,7 +1446,7 @@ export default function App() {
         </header>
 
         {/* ============== HERO ============== */}
-        <section className={`relative min-h-svh md:min-h-screen flex flex-col overflow-hidden ${isDark ? 'text-stone-100' : 'text-stone-900'}`}>
+        <section className={`relative min-h-svh md:min-h-screen flex flex-col overflow-hidden ${heroIsDark ? 'text-stone-100' : 'text-stone-900'}`}>
           {/* Background image with sutle parallax — referrerPolicy avoids Google's hotlink block */}
           <div
             className="absolute inset-0 will-change-transform"
@@ -1478,11 +1476,11 @@ export default function App() {
               className={`hidden md:block absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${isDark ? 'opacity-0' : 'opacity-100'}`}
               onError={(e) => { e.currentTarget.style.display = 'none'; }}
             />
-            {/* Atmospheric overlay — light at top so the photo shows, darker at bottom for legibility */}
+            {/* Atmospheric overlay — dark scrim on mobile (over the dark party photo), barely-there warm tint on desktop (over the bright beach photo) */}
             <div className={`absolute inset-0 ${
-              isDark
+              heroIsDark
                 ? 'bg-gradient-to-b from-stone-950/20 via-stone-950/10 to-stone-950/70'
-                : 'bg-gradient-to-b from-stone-900/25 via-stone-900/35 to-stone-900/65'
+                : 'bg-gradient-to-b from-amber-50/10 via-amber-50/5 to-amber-50/30'
             }`}/>
             {/* Fallback gradient if images fail */}
             <div className={`absolute inset-0 -z-10 ${
@@ -1492,18 +1490,11 @@ export default function App() {
             }`}/>
           </div>
 
-          {/* Decorative martini icon corner */}
-          <svg viewBox="0 0 100 200" className={`absolute top-12 right-8 md:right-16 w-12 md:w-16 ${isDark ? 'text-amber-200/30' : 'text-amber-100/25'}`} fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M15 20 L85 20 L50 80 Z"/>
-            <line x1="50" y1="80" x2="50" y2="160"/>
-            <path d="M35 175 L65 175 L70 180 Q50 188 30 180 Z"/>
-          </svg>
-
           {/* SOMOS CARNAVAL — transparent PNG floating on the side (desktop / tablet) */}
           <img
             src={SOMOS_CARNAVAL}
             alt="Somos Carnaval Eterno no Rio"
-            className="hidden md:block absolute left-6 lg:left-12 top-1/2 -translate-y-1/2 w-44 lg:w-56 xl:w-64 z-10 select-none pointer-events-none [filter:drop-shadow(0_0_4px_rgba(0,0,0,0.85))_drop-shadow(0_4px_14px_rgba(0,0,0,0.55))]"
+            className="hidden md:block absolute left-6 lg:left-12 top-1/2 -translate-y-1/2 w-44 lg:w-56 xl:w-64 z-10 select-none pointer-events-none invert [filter:drop-shadow(0_2px_8px_rgba(255,255,255,0.45))]"
           />
 
           <div className="relative flex-1 flex flex-col">
@@ -1551,38 +1542,34 @@ export default function App() {
               <div className="flex-1 flex items-center justify-center px-5 py-20">
                 <div className="text-center w-full max-w-4xl">
                   <div className="mb-6 flex justify-center">
-                    <LiveBadge t={t} theme={theme}/>
+                    <LiveBadge t={t} theme={heroIsDark ? 'dark' : 'light'}/>
                   </div>
-                  <p className={`text-[11px] md:text-xs tracking-[0.3em] uppercase mb-8 md:mb-10 ${isDark ? 'text-amber-200/70' : 'text-amber-100/90'}`} style={{ textShadow: isDark ? undefined : '0 2px 12px rgba(0,0,0,0.55)' }}>{t.locTag}</p>
+                  <p className={`text-[11px] md:text-xs tracking-[0.3em] uppercase mb-8 md:mb-10 ${heroIsDark ? 'text-amber-200/70' : 'text-stone-700'}`}>{t.locTag}</p>
 
                   {/* Hero tagline — light weight for the modern restaurant look */}
-                  <p className={`text-xl md:text-3xl leading-snug max-w-2xl mx-auto px-4 tracking-tight ${isDark ? 'text-stone-200' : 'text-white'}`} style={{ fontFamily: "'Geist', 'Inter', system-ui, sans-serif", fontWeight: 300, textShadow: isDark ? undefined : '0 2px 14px rgba(0,0,0,0.6)' }}>
+                  <p className={`text-xl md:text-3xl leading-snug max-w-2xl mx-auto px-4 tracking-tight ${heroIsDark ? 'text-stone-200' : 'text-stone-900'}`} style={{ fontFamily: "'Geist', 'Inter', system-ui, sans-serif", fontWeight: 300 }}>
                     {t.sub}
                   </p>
 
-                  {/* Finns · Chill Out duo logo (white logo over the photo via screen blend) */}
+                  {/* Finns · Chill Out duo logo — invert to black text + multiply blend so the JPG black bg drops out on the bright beach photo */}
                   <img
                     src={LOGO_DUO_DARK}
                     alt="Finns · Chill Out — Rio Beach Club"
-                    className="mt-10 md:mt-12 w-full max-w-[520px] mx-auto mix-blend-screen select-none pointer-events-none"
+                    className="mt-10 md:mt-12 w-full max-w-[520px] mx-auto invert mix-blend-multiply select-none pointer-events-none"
                   />
 
                   {/* Two menus aligned under each brand: FINNS (gastronomia internacional) · CHILL OUT (sushi) */}
                   <div className="mt-6 md:mt-8 grid grid-cols-2 gap-4 max-w-[520px] mx-auto">
                     <button
                       onClick={openInternacional}
-                      className={`group rounded-2xl px-4 py-3.5 text-center transition-all hover:scale-[1.02] active:scale-95 ${
-                        isDark ? 'bg-amber-200 text-stone-950 hover:bg-amber-100' : 'bg-stone-900 text-amber-100 hover:bg-stone-800'
-                      }`}
+                      className="group rounded-2xl px-4 py-3.5 text-center transition-all hover:scale-[1.02] active:scale-95 bg-stone-900 text-amber-100 hover:bg-stone-800"
                     >
                       <span className="block text-[9px] tracking-[0.22em] uppercase opacity-70">{t.menuEyebrow}</span>
                       <span className="block text-sm font-semibold leading-tight mt-0.5">{t.menuInternacional}</span>
                     </button>
                     <button
                       onClick={openSushi}
-                      className={`group rounded-2xl px-4 py-3.5 text-center transition-all hover:scale-[1.02] active:scale-95 ${
-                        isDark ? 'bg-amber-200 text-stone-950 hover:bg-amber-100' : 'bg-stone-900 text-amber-100 hover:bg-stone-800'
-                      }`}
+                      className="group rounded-2xl px-4 py-3.5 text-center transition-all hover:scale-[1.02] active:scale-95 bg-stone-900 text-amber-100 hover:bg-stone-800"
                     >
                       <span className="block text-[9px] tracking-[0.22em] uppercase opacity-70">{t.menuEyebrow}</span>
                       <span className="block text-sm font-semibold leading-tight mt-0.5">{t.menuSushi}</span>
@@ -1593,7 +1580,7 @@ export default function App() {
 
               {/* Bottom info strip */}
               <div className="px-5 pb-6 max-w-6xl mx-auto w-full">
-                <div className={`flex flex-wrap items-center justify-center md:justify-between gap-4 text-[11px] tracking-[0.1em] uppercase ${isDark ? 'text-amber-100/60' : 'text-white/75'}`} style={{ textShadow: isDark ? undefined : '0 1px 10px rgba(0,0,0,0.55)' }}>
+                <div className={`flex flex-wrap items-center justify-center md:justify-between gap-4 text-[11px] tracking-[0.1em] uppercase ${heroIsDark ? 'text-amber-100/60' : 'text-stone-700'}`}>
                   <div className="flex items-center gap-2"><MapPin size={12}/> {t.address} · {t.addressLine2}</div>
                   <div className="flex items-center gap-2"><Clock size={12}/> {t.hoursWeekend}</div>
                 </div>
