@@ -1370,9 +1370,15 @@ export default function App() {
   // Nav controls sit over the dark hero photo only on mobile while at the top → light styling
   const navOverPhoto = isMobile && !scrolled;
 
-  // Featured (Destaques do Chef) stays sushi-only (chef-tagged sushi with photos)
-  const featured = useMemo(() =>
+  // Sushi destaques (Chill Out) — chef-tagged sushi with photos
+  const featuredSushi = useMemo(() =>
     menu.filter(m => kindOf(m) === 'sushi' && m.tags?.includes('chef') && m.price != null && PHOTOS[m.id]).slice(0, 6),
+  []);
+
+  // Finns Specials destaques — 6 dishes hand-picked from the international menu
+  const FINNS_PICKS = ['I036','I039','I040','I014','I019','I046'];
+  const featuredFinns = useMemo(() =>
+    FINNS_PICKS.map(id => menu.find(m => m.id === id)).filter(Boolean),
   []);
 
   const filtered = useMemo(() => {
@@ -1395,8 +1401,10 @@ export default function App() {
 
   const scrollToMenu = () => menuRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   const scrollToDestaques = () => destaquesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Both buttons land at Destaques do Chef (which now shows BOTH brand blocks);
+  // the menu tab below is set so when the user scrolls past destaques they get the right cardapio.
   const openSushi = () => { setActiveMenu('sushi'); setActiveCat('all'); requestAnimationFrame(scrollToDestaques); };
-  const openInternacional = () => { setActiveMenu('internacional'); setActiveCat('all'); requestAnimationFrame(scrollToMenu); };
+  const openInternacional = () => { setActiveMenu('internacional'); setActiveCat('all'); requestAnimationFrame(scrollToDestaques); };
 
   // ============================================================
   // Theme-driven palette
@@ -1537,30 +1545,47 @@ export default function App() {
               </div>
             </div>
 
-            {/* ===== DESKTOP hero (unchanged) ===== */}
+            {/* ===== DESKTOP hero ===== */}
             <div className="hidden md:flex flex-1 flex-col">
-              {/* Centered logo + tagline */}
+              {/* Centered content: badge + eyebrow + tagline + Finns|Chill Out duo logo + 2 menu buttons */}
               <div className="flex-1 flex items-center justify-center px-5 py-20">
                 <div className="text-center w-full max-w-4xl">
                   <div className="mb-6 flex justify-center">
                     <LiveBadge t={t} theme={theme}/>
                   </div>
-                  <p className={`text-[11px] md:text-xs tracking-[0.3em] uppercase mb-8 md:mb-12 ${isDark ? 'text-amber-200/70' : 'text-amber-100/90'}`} style={{ textShadow: isDark ? undefined : '0 2px 12px rgba(0,0,0,0.55)' }}>{t.locTag}</p>
+                  <p className={`text-[11px] md:text-xs tracking-[0.3em] uppercase mb-8 md:mb-10 ${isDark ? 'text-amber-200/70' : 'text-amber-100/90'}`} style={{ textShadow: isDark ? undefined : '0 2px 12px rgba(0,0,0,0.55)' }}>{t.locTag}</p>
 
                   {/* Hero tagline — light weight for the modern restaurant look */}
-                  <p className={`mt-10 md:mt-14 text-xl md:text-3xl leading-snug max-w-2xl mx-auto px-4 tracking-tight ${isDark ? 'text-stone-200' : 'text-white'}`} style={{ fontFamily: "'Geist', 'Inter', system-ui, sans-serif", fontWeight: 300, textShadow: isDark ? undefined : '0 2px 14px rgba(0,0,0,0.6)' }}>
+                  <p className={`text-xl md:text-3xl leading-snug max-w-2xl mx-auto px-4 tracking-tight ${isDark ? 'text-stone-200' : 'text-white'}`} style={{ fontFamily: "'Geist', 'Inter', system-ui, sans-serif", fontWeight: 300, textShadow: isDark ? undefined : '0 2px 14px rgba(0,0,0,0.6)' }}>
                     {t.sub}
                   </p>
 
-                  <div className="mt-10 md:mt-12 flex items-center justify-center">
+                  {/* Finns · Chill Out duo logo (white logo over the photo via screen blend) */}
+                  <img
+                    src={LOGO_DUO_DARK}
+                    alt="Finns · Chill Out — Rio Beach Club"
+                    className="mt-10 md:mt-12 w-full max-w-[520px] mx-auto mix-blend-screen select-none pointer-events-none"
+                  />
+
+                  {/* Two menus aligned under each brand: FINNS (gastronomia internacional) · CHILL OUT (sushi) */}
+                  <div className="mt-6 md:mt-8 grid grid-cols-2 gap-4 max-w-[520px] mx-auto">
                     <button
-                      onClick={scrollToMenu}
-                      className={`group inline-flex items-center justify-center gap-2 px-10 py-3.5 rounded-full font-medium text-sm tracking-wide transition-all hover:scale-[1.02] active:scale-95 ${
+                      onClick={openInternacional}
+                      className={`group rounded-2xl px-4 py-3.5 text-center transition-all hover:scale-[1.02] active:scale-95 ${
                         isDark ? 'bg-amber-200 text-stone-950 hover:bg-amber-100' : 'bg-stone-900 text-amber-100 hover:bg-stone-800'
                       }`}
                     >
-                      {t.ctaMenu}
-                      <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform"/>
+                      <span className="block text-[9px] tracking-[0.22em] uppercase opacity-70">{t.menuEyebrow}</span>
+                      <span className="block text-sm font-semibold leading-tight mt-0.5">{t.menuInternacional}</span>
+                    </button>
+                    <button
+                      onClick={openSushi}
+                      className={`group rounded-2xl px-4 py-3.5 text-center transition-all hover:scale-[1.02] active:scale-95 ${
+                        isDark ? 'bg-amber-200 text-stone-950 hover:bg-amber-100' : 'bg-stone-900 text-amber-100 hover:bg-stone-800'
+                      }`}
+                    >
+                      <span className="block text-[9px] tracking-[0.22em] uppercase opacity-70">{t.menuEyebrow}</span>
+                      <span className="block text-sm font-semibold leading-tight mt-0.5">{t.menuSushi}</span>
                     </button>
                   </div>
                 </div>
@@ -1577,7 +1602,7 @@ export default function App() {
           </div>
         </section>
 
-        {/* ============== DESTAQUES DO CHEF ============== */}
+        {/* ============== DESTAQUES DO CHEF — two brand blocks: Finns Specials + Chill Out Sushi ============== */}
         <section ref={destaquesRef} className={`relative ${sectionBg} border-t ${borderClr}`}>
           <div className="max-w-6xl mx-auto px-5 py-20 md:py-32">
             <Reveal>
@@ -1590,18 +1615,42 @@ export default function App() {
                   </p>
                 </div>
                 <div className="text-left sm:text-right shrink-0 sm:pt-2">
-                  <p className={`text-3xl md:text-4xl tabular-nums ${isDark ? 'text-stone-100' : 'text-stone-900'}`} style={{ fontWeight: 300 }}>0{featured.length}</p>
+                  <p className={`text-3xl md:text-4xl tabular-nums ${isDark ? 'text-stone-100' : 'text-stone-900'}`} style={{ fontWeight: 300 }}>0{featuredFinns.length + featuredSushi.length}</p>
                   <p className={`text-[10px] tracking-[0.25em] uppercase mt-1 ${subtleClr}`}>{t.selectedPlates}</p>
                 </div>
               </div>
             </Reveal>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-              {featured.map((d, i) => (
-                <Reveal key={d.id} delay={i * 80}>
-                  <FeaturedCard dish={d} lang={lang} t={t} theme={theme} catLabel={t.cats[d.cat]}/>
-                </Reveal>
-              ))}
+            {/* FINNS — Gastronomia Internacional */}
+            <div className="mb-14 md:mb-20">
+              <div className="flex items-center gap-3 mb-6 md:mb-8">
+                <h3 className={`text-2xl md:text-3xl ${isDark ? 'text-stone-100' : 'text-stone-900'}`} style={{ fontWeight: 400 }}>Finns · {t.menuInternacional}</h3>
+                <div className={`flex-1 h-px ${isDark ? 'bg-stone-800' : 'bg-stone-300/70'}`}/>
+                <span className={`text-xs font-mono ${subtleClr}`}>{featuredFinns.length}</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+                {featuredFinns.map((d, i) => (
+                  <Reveal key={d.id} delay={i * 80}>
+                    <FeaturedCard dish={d} lang={lang} t={t} theme={theme} catLabel={t.cats[d.cat]}/>
+                  </Reveal>
+                ))}
+              </div>
+            </div>
+
+            {/* CHILL OUT — Sushi */}
+            <div>
+              <div className="flex items-center gap-3 mb-6 md:mb-8">
+                <h3 className={`text-2xl md:text-3xl ${isDark ? 'text-stone-100' : 'text-stone-900'}`} style={{ fontWeight: 400 }}>Chill Out · {t.menuSushi}</h3>
+                <div className={`flex-1 h-px ${isDark ? 'bg-stone-800' : 'bg-stone-300/70'}`}/>
+                <span className={`text-xs font-mono ${subtleClr}`}>{featuredSushi.length}</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+                {featuredSushi.map((d, i) => (
+                  <Reveal key={d.id} delay={i * 80}>
+                    <FeaturedCard dish={d} lang={lang} t={t} theme={theme} catLabel={t.cats[d.cat]}/>
+                  </Reveal>
+                ))}
+              </div>
             </div>
           </div>
         </section>
