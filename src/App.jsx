@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef, createContext, useContext } from 'react';
-import { Search, MapPin, Phone, MessageCircle, Instagram, Clock, Star, Flame, ChevronRight, X, ArrowUpRight, ArrowRight, Sun, Moon, ChefHat } from 'lucide-react';
+import { Search, MapPin, MessageCircle, Instagram, Clock, Star, Flame, ChevronRight, X, ArrowUpRight, ArrowRight, Sun, Moon, ChefHat } from 'lucide-react';
 
 // ============================================================
 // Hero background photos — self-hosted in /public.
@@ -28,7 +28,7 @@ const i18n = {
     menu: 'Cardápio',
     visit: 'Visita',
     visitTitle: ['Como ', 'chegar', '.'],
-    visitSub: 'Av. Lúcio Costa, Recreio dos Bandeirantes. Pé na areia, sempre.',
+    visitSub: 'Av. Atlântica, posto 13 — Copacabana. Pé na areia, sempre.',
     featuredEyebrow: 'Sugestão do Chef',
     featuredTitle: ['Destaques ', 'do chef'],
     featuredSub: 'Os pratos que pedimos toda noite. Recortados pela cozinha esta semana.',
@@ -38,11 +38,11 @@ const i18n = {
     menuSub: 'pratos hoje · busca em tempo real',
     searchPh: 'atum, mochi, caipirinha, trufado…',
     all: 'Todos', noResults: 'Nenhum prato encontrado',
-    address: 'Av. Lúcio Costa', addressLine2: 'Recreio dos Bandeirantes — Rio de Janeiro',
+    address: 'Av. Atlântica, posto 13', addressLine2: 'Copacabana — Rio de Janeiro · Brasil',
     addressLabel: 'Endereço', hoursLabel: 'Horário',
-    hoursWeek: 'Seg a Qui · 12h–23h', hoursWeekend: 'Sex a Dom · 12h–01h',
+    hoursWeek: 'Seg a Qui · 12h–23h', hoursWeekend: 'Sex a Dom · 12h–00h',
     whatsappLabel: 'WhatsApp', whatsappSub: 'Reservas e dúvidas',
-    phoneLabel: 'Telefone', phoneSub: 'Recepção · 12h–23h',
+    reviewLabel: 'Deixe uma review', reviewSub: 'Avalie no Google Maps',
     igLabel: 'Instagram', igSub: 'Pôr-do-sol, agenda',
     openMaps: 'Abrir no Google Maps',
     openNow: 'Aberto agora', closedNow: 'Fechado',
@@ -80,7 +80,7 @@ const i18n = {
     menu: 'Carta',
     visit: 'Visita',
     visitTitle: ['Cómo ', 'llegar', '.'],
-    visitSub: 'Av. Lúcio Costa, Recreio dos Bandeirantes. Pie en la arena, siempre.',
+    visitSub: 'Av. Atlântica, posto 13 — Copacabana. Pie en la arena, siempre.',
     featuredEyebrow: 'Sugerencia del Chef',
     featuredTitle: ['Destacados ', 'del chef'],
     featuredSub: 'Los platos que pedimos cada noche. Seleccionados por la cocina esta semana.',
@@ -90,11 +90,11 @@ const i18n = {
     menuSub: 'platos hoy · búsqueda en tiempo real',
     searchPh: 'atún, mochi, caipirinha, trufado…',
     all: 'Todos', noResults: 'No se encontraron platos',
-    address: 'Av. Lúcio Costa', addressLine2: 'Recreio dos Bandeirantes — Río de Janeiro',
+    address: 'Av. Atlântica, posto 13', addressLine2: 'Copacabana — Río de Janeiro · Brasil',
     addressLabel: 'Dirección', hoursLabel: 'Horario',
-    hoursWeek: 'Lun a Jue · 12h–23h', hoursWeekend: 'Vie a Dom · 12h–01h',
+    hoursWeek: 'Lun a Jue · 12h–23h', hoursWeekend: 'Vie a Dom · 12h–00h',
     whatsappLabel: 'WhatsApp', whatsappSub: 'Reservas y consultas',
-    phoneLabel: 'Teléfono', phoneSub: 'Recepción · 12h–23h',
+    reviewLabel: 'Dejá una review', reviewSub: 'Calificá en Google Maps',
     igLabel: 'Instagram', igSub: 'Atardecer, agenda',
     openMaps: 'Abrir en Google Maps',
     openNow: 'Abierto ahora', closedNow: 'Cerrado',
@@ -132,7 +132,7 @@ const i18n = {
     menu: 'Menu',
     visit: 'Visit',
     visitTitle: ['How to ', 'get here', '.'],
-    visitSub: 'Av. Lúcio Costa, Recreio dos Bandeirantes. Feet in the sand, always.',
+    visitSub: 'Av. Atlântica, posto 13 — Copacabana. Feet in the sand, always.',
     featuredEyebrow: "Chef's Suggestion",
     featuredTitle: ["Chef's ", 'picks'],
     featuredSub: "The dishes we order every night. Hand-picked by the kitchen this week.",
@@ -142,11 +142,11 @@ const i18n = {
     menuSub: 'dishes today · live search',
     searchPh: 'tuna, mochi, caipirinha, truffle…',
     all: 'All', noResults: 'No dishes found',
-    address: 'Av. Lúcio Costa', addressLine2: 'Recreio dos Bandeirantes — Rio de Janeiro',
+    address: 'Av. Atlântica, posto 13', addressLine2: 'Copacabana — Rio de Janeiro · Brazil',
     addressLabel: 'Address', hoursLabel: 'Hours',
-    hoursWeek: 'Mon–Thu · 12pm–11pm', hoursWeekend: 'Fri–Sun · 12pm–1am',
+    hoursWeek: 'Mon–Thu · 12pm–11pm', hoursWeekend: 'Fri–Sun · 12pm–12am',
     whatsappLabel: 'WhatsApp', whatsappSub: 'Reservations & questions',
-    phoneLabel: 'Phone', phoneSub: 'Reception · 12pm–11pm',
+    reviewLabel: 'Leave a review', reviewSub: 'Rate us on Google Maps',
     igLabel: 'Instagram', igSub: 'Sunset, events',
     openMaps: 'Open in Google Maps',
     openNow: 'Open now', closedNow: 'Closed',
@@ -985,7 +985,7 @@ function useLiveStatus() {
               || (day === 6 && hour < 1) // Sat after midnight (was Fri night)
               || (day === 0 && hour < 1) // Sun after midnight
               || (day === 1 && hour < 1); // Mon after midnight (was Sun)
-  const closesText = isWeekend ? '12h' : '23h';
+  const closesText = isWeekend ? '00h' : '23h';
   return { isOpen, closesAt: closesText, day };
 }
 
@@ -1237,10 +1237,10 @@ function CoastMap({ theme }) {
 
       {/* Labels */}
       <text x="60" y="190" fontSize="13" fontFamily="'Geist', 'Inter', sans-serif" fontWeight="300" letterSpacing="2" fill={labelColor}>OCEANO ATLÂNTICO</text>
-      <text x="430" y="335" fontSize="12" fontFamily="'Geist', 'Inter', sans-serif" fontWeight="300" letterSpacing="2" fill={labelColor}>RECREIO</text>
+      <text x="420" y="335" fontSize="12" fontFamily="'Geist', 'Inter', sans-serif" fontWeight="300" letterSpacing="2" fill={labelColor}>COPACABANA</text>
 
-      <text x="40" y="430" fontSize="10" fontFamily="Inter, sans-serif" letterSpacing="3" fill={labelColor}>BARRA</text>
-      <text x="490" y="430" fontSize="10" fontFamily="Inter, sans-serif" letterSpacing="3" fill={labelColor}>PRAINHA</text>
+      <text x="40" y="430" fontSize="10" fontFamily="Inter, sans-serif" letterSpacing="3" fill={labelColor}>LEME</text>
+      <text x="480" y="430" fontSize="10" fontFamily="Inter, sans-serif" letterSpacing="3" fill={labelColor}>IPANEMA</text>
     </svg>
   );
 }
@@ -1602,11 +1602,11 @@ export default function App() {
           </div>
         </section>
 
-        {/* ============== DESTAQUES DO CHEF — two brand blocks: Finns Specials + Chill Out Sushi ============== */}
+        {/* ============== DESTAQUES DO CHEF — tabs linkeados con activeMenu (sushi | internacional) ============== */}
         <section ref={destaquesRef} className={`relative ${sectionBg} border-t ${borderClr}`}>
           <div className="max-w-6xl mx-auto px-5 py-20 md:py-32">
             <Reveal>
-              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-8 mb-10 md:mb-16">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-8 mb-10 md:mb-12">
                 <div className="min-w-0 max-w-2xl">
                   <p className={`text-[11px] tracking-[0.3em] uppercase mb-4 ${eyebrowClr}`}>01</p>
                   <DisplayTitle parts={t.featuredTitle} theme={theme} className="text-5xl md:text-7xl mb-5"/>
@@ -1615,42 +1615,35 @@ export default function App() {
                   </p>
                 </div>
                 <div className="text-left sm:text-right shrink-0 sm:pt-2">
-                  <p className={`text-3xl md:text-4xl tabular-nums ${isDark ? 'text-stone-100' : 'text-stone-900'}`} style={{ fontWeight: 300 }}>0{featuredFinns.length + featuredSushi.length}</p>
+                  <p className={`text-3xl md:text-4xl tabular-nums ${isDark ? 'text-stone-100' : 'text-stone-900'}`} style={{ fontWeight: 300 }}>0{(activeMenu === 'sushi' ? featuredSushi : featuredFinns).length}</p>
                   <p className={`text-[10px] tracking-[0.25em] uppercase mt-1 ${subtleClr}`}>{t.selectedPlates}</p>
                 </div>
               </div>
             </Reveal>
 
-            {/* FINNS — Gastronomia Internacional */}
-            <div className="mb-14 md:mb-20">
-              <div className="flex items-center gap-3 mb-6 md:mb-8">
-                <h3 className={`text-2xl md:text-3xl ${isDark ? 'text-stone-100' : 'text-stone-900'}`} style={{ fontWeight: 400 }}>Finns · {t.menuInternacional}</h3>
-                <div className={`flex-1 h-px ${isDark ? 'bg-stone-800' : 'bg-stone-300/70'}`}/>
-                <span className={`text-xs font-mono ${subtleClr}`}>{featuredFinns.length}</span>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-                {featuredFinns.map((d, i) => (
-                  <Reveal key={d.id} delay={i * 80}>
-                    <FeaturedCard dish={d} lang={lang} t={t} theme={theme} catLabel={t.cats[d.cat]}/>
-                  </Reveal>
+            {/* Brand tabs — same shape as the menu tabs (single source of truth: activeMenu) */}
+            <div className="mb-10 md:mb-12 flex justify-center">
+              <div className={`inline-flex rounded-full p-1 border ${isDark ? 'border-stone-800 bg-stone-950/60' : 'border-stone-300 bg-white/70'}`}>
+                {[['sushi', `Chill Out · ${t.menuSushi}`], ['internacional', `Finns · ${t.menuInternacional}`]].map(([k, label]) => (
+                  <button
+                    key={k}
+                    onClick={() => { setActiveMenu(k); setActiveCat('all'); setQuery(''); }}
+                    className={`px-4 sm:px-5 py-2 rounded-full text-[11px] sm:text-xs tracking-[0.15em] uppercase font-medium transition-colors ${
+                      activeMenu === k
+                        ? (isDark ? 'bg-amber-200 text-stone-950' : 'bg-stone-900 text-amber-100')
+                        : (isDark ? 'text-stone-400 hover:text-stone-200' : 'text-stone-600 hover:text-stone-900')
+                    }`}
+                  >{label}</button>
                 ))}
               </div>
             </div>
 
-            {/* CHILL OUT — Sushi */}
-            <div>
-              <div className="flex items-center gap-3 mb-6 md:mb-8">
-                <h3 className={`text-2xl md:text-3xl ${isDark ? 'text-stone-100' : 'text-stone-900'}`} style={{ fontWeight: 400 }}>Chill Out · {t.menuSushi}</h3>
-                <div className={`flex-1 h-px ${isDark ? 'bg-stone-800' : 'bg-stone-300/70'}`}/>
-                <span className={`text-xs font-mono ${subtleClr}`}>{featuredSushi.length}</span>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-                {featuredSushi.map((d, i) => (
-                  <Reveal key={d.id} delay={i * 80}>
-                    <FeaturedCard dish={d} lang={lang} t={t} theme={theme} catLabel={t.cats[d.cat]}/>
-                  </Reveal>
-                ))}
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+              {(activeMenu === 'sushi' ? featuredSushi : featuredFinns).map((d, i) => (
+                <Reveal key={d.id} delay={i * 80}>
+                  <FeaturedCard dish={d} lang={lang} t={t} theme={theme} catLabel={t.cats[d.cat]}/>
+                </Reveal>
+              ))}
             </div>
           </div>
         </section>
@@ -1780,7 +1773,7 @@ export default function App() {
                 <div className={`relative aspect-[4/3] md:aspect-square rounded-2xl overflow-hidden border ${isDark ? 'border-stone-800' : 'border-stone-200'}`}>
                   <CoastMap theme={theme}/>
                   <a
-                    href="https://www.google.com/maps/place/Finns+Rio+Beach+Club/@-22.9696543,-43.1812867,17z"
+                    href="https://www.google.com/maps/place/Finns+Rio+Beach+Club/@-22.9696543,-43.1812867,17z/data=!4m6!3m5!1s0x9bd568e592475f:0x7609b350c6211cf!8m2!3d-22.9696543!4d-43.1812867!16s%2Fg%2F11rd0t04rj"
                     target="_blank" rel="noreferrer"
                     className={`absolute bottom-5 left-5 inline-flex items-center gap-2 px-4 py-2 rounded-full text-[11px] tracking-wide font-medium transition-all backdrop-blur ${
                       isDark ? 'bg-stone-950/80 text-amber-200 hover:bg-stone-950 border border-amber-200/30' : 'bg-white/90 text-stone-900 hover:bg-white border border-stone-900/10'
@@ -1796,10 +1789,10 @@ export default function App() {
               <Reveal delay={220}>
                 {/* Info list */}
                 <div className={`divide-y ${isDark ? 'divide-stone-800' : 'divide-stone-200'}`}>
-                  <InfoRow theme={theme} icon={MapPin} label={t.addressLabel} value={`${t.address}, 1015`} sub={t.addressLine2} href="https://www.google.com/maps/place/Finns+Rio+Beach+Club"/>
+                  <InfoRow theme={theme} icon={MapPin} label={t.addressLabel} value={t.address} sub={t.addressLine2} href="https://www.google.com/maps/place/Finns+Rio+Beach+Club/@-22.9696543,-43.1812867,17z/data=!4m6!3m5!1s0x9bd568e592475f:0x7609b350c6211cf!8m2!3d-22.9696543!4d-43.1812867!16s%2Fg%2F11rd0t04rj"/>
                   <InfoRow theme={theme} icon={Clock}  label={t.hoursLabel}   value={t.hoursWeek} sub={t.hoursWeekend}/>
                   <InfoRow theme={theme} icon={MessageCircle} label={t.whatsappLabel} value="+55 21 99999-9999" sub={t.whatsappSub} href="https://wa.me/5521999999999"/>
-                  <InfoRow theme={theme} icon={Phone}  label={t.phoneLabel}   value="(21) 3030-9000" sub={t.phoneSub} href="tel:+552130309000"/>
+                  <InfoRow theme={theme} icon={Star}   label={t.reviewLabel}  value="Google Maps" sub={t.reviewSub} href="https://www.google.com/maps/place/Finns+Rio+Beach+Club/@-22.9696543,-43.1812867,17z/data=!4m8!3m7!1s0x9bd568e592475f:0x7609b350c6211cf!8m2!3d-22.9696543!4d-43.1812867!9m1!1b1!16s%2Fg%2F11rd0t04rj"/>
                   <InfoRow theme={theme} icon={Instagram} label={t.igLabel}   value="@finnsrio" sub={t.igSub} href="https://instagram.com/finnsrio"/>
                 </div>
               </Reveal>
