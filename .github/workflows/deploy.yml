@@ -26,11 +26,14 @@ jobs:
       - run: npm ci
       - name: Build with Vite
         env:
-          # IMPORTANT: replace 'chillout-rio' with YOUR repo name.
+          # Repo name on GitHub (the path under juanchiansaldi.github.io/).
           # If you use a custom domain, set VITE_BASE: '/'
-          VITE_BASE: '/chillout-rio/'
+          VITE_BASE: '/FINNSRIO/'
         run: npm run build
       - uses: actions/configure-pages@v5
+        with:
+          # Auto-enable Pages on first run if not yet enabled (needs pages:write permission, already granted above)
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
